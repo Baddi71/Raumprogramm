@@ -172,4 +172,31 @@
 		background-color: #6c757d;
 		color: white;
 	}
+
+	/* Mobile styles */
+	@media (max-width: 768px) {
+		.filter-bar {
+			flex-direction: column;
+			gap: 0.75rem;
+		}
+
+		.search-box {
+			min-width: 100%;
+		}
+
+		.filter-selects {
+			width: 100%;
+			flex-direction: column;
+			gap: 0.5rem;
+		}
+
+		.filter-select {
+			width: 100%;
+			min-width: 100%;
+		}
+
+		.clear-btn {
+			width: 100%;
+		}
+	}
 </style>

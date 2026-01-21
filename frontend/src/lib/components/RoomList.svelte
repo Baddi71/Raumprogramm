@@ -177,4 +177,32 @@
 		font-size: 0.9rem;
 		padding: 1rem;
 	}
+
+	/* Mobile styles */
+	@media (max-width: 768px) {
+		.room-list-container {
+			padding: 1rem;
+		}
+
+		.room-grid {
+			grid-template-columns: 1fr;
+			gap: 1rem;
+		}
+
+		.loading-state,
+		.error-state,
+		.empty-state {
+			padding: 2rem 1rem;
+		}
+
+		.result-info {
+			font-size: 0.85rem;
+		}
+	}
+
+	@media (max-width: 480px) {
+		.room-list-container {
+			padding: 0.75rem;
+		}
+	}
 </style>

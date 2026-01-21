@@ -747,6 +747,20 @@
 		min-height: 100px;
 	}
 
+	@media (max-width: 768px) {
+		.room-editor {
+			padding: 1rem;
+		}
+
+		.form-section {
+			padding: 1rem;
+		}
+
+		.form-sections {
+			gap: 1.5rem;
+		}
+	}
+
 	@media (max-width: 600px) {
 		.form-grid {
 			grid-template-columns: 1fr;
@@ -755,11 +769,34 @@
 		.editor-header {
 			flex-direction: column;
 			gap: 1rem;
-			align-items: flex-start;
+			align-items: stretch;
+		}
+
+		.editor-header h2 {
+			font-size: 1.25rem;
+		}
+
+		.editor-actions {
+			flex-direction: column;
+		}
+
+		.editor-actions .btn {
+			width: 100%;
 		}
 
 		.tabs {
 			flex-wrap: wrap;
+		}
+
+		.tab {
+			flex: 1;
+			text-align: center;
+			padding: 0.75rem 0.5rem;
+			font-size: 0.85rem;
+		}
+
+		.form-section h3 {
+			font-size: 1rem;
 		}
 	}
 </style>

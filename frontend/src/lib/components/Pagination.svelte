@@ -122,4 +122,22 @@
 		padding: 0.5rem;
 		color: #6c757d;
 	}
+
+	/* Mobile styles */
+	@media (max-width: 480px) {
+		.pagination {
+			gap: 0.125rem;
+		}
+
+		.page-btn {
+			min-width: 36px;
+			height: 36px;
+			padding: 0.375rem;
+			font-size: 0.85rem;
+		}
+
+		.page-ellipsis {
+			padding: 0.25rem;
+		}
+	}
 </style>

@@ -139,4 +139,23 @@ VITE_SURREAL_ENDPOINT=wss://your-instance.surreal.io/rpc</pre>
 		margin: 1rem 0;
 		overflow-x: auto;
 	}
+
+	/* Mobile styles */
+	@media (max-width: 768px) {
+		.auth-required,
+		.loading-state,
+		.config-warning {
+			padding: 2rem 1rem;
+		}
+
+		.auth-required h2,
+		.config-warning h2 {
+			font-size: 1.25rem;
+		}
+
+		.config-warning pre {
+			font-size: 0.75rem;
+			padding: 0.75rem;
+		}
+	}
 </style>

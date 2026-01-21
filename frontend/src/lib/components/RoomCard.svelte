@@ -161,4 +161,28 @@
 		font-size: 0.8rem;
 		text-align: center;
 	}
+
+	/* Mobile styles */
+	@media (max-width: 480px) {
+		.room-card {
+			padding: 1rem;
+		}
+
+		.room-title {
+			font-size: 1rem;
+		}
+
+		.room-details {
+			grid-template-columns: 1fr;
+			gap: 0.5rem;
+		}
+
+		.detail-label {
+			font-size: 0.7rem;
+		}
+
+		.detail-value {
+			font-size: 0.85rem;
+		}
+	}
 </style>

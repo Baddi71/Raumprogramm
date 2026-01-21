@@ -2,6 +2,8 @@
 	import { authStore, user, isLoading } from '$lib/auth';
 	import { base } from '$app/paths';
 
+	let mobileMenuOpen = false;
+
 	async function handleLogin() {
 		try {
 			await authStore.login();
@@ -17,6 +19,14 @@
 			console.error('Logout failed:', error);
 		}
 	}
+
+	function toggleMenu() {
+		mobileMenuOpen = !mobileMenuOpen;
+	}
+
+	function closeMenu() {
+		mobileMenuOpen = false;
+	}
 </script>
 
 <nav class="navbar">
@@ -24,19 +34,27 @@
 		<a href="{base}/" class="navbar-logo">Raum-Editor</a>
 	</div>
 
-	<div class="navbar-menu">
-		<a href="{base}/rooms" class="navbar-link">Räume</a>
-	</div>
+	<button class="hamburger" class:open={mobileMenuOpen} on:click={toggleMenu} aria-label="Menu">
+		<span></span>
+		<span></span>
+		<span></span>
+	</button>
 
-	<div class="navbar-auth">
-		{#if $isLoading}
-			<span class="loading">Laden...</span>
-		{:else if $user}
-			<span class="user-name">{$user.name}</span>
-			<button class="btn btn-secondary" on:click={handleLogout}>Abmelden</button>
-		{:else}
-			<button class="btn btn-primary" on:click={handleLogin}>Anmelden</button>
-		{/if}
+	<div class="navbar-content" class:open={mobileMenuOpen}>
+		<div class="navbar-menu">
+			<a href="{base}/rooms" class="navbar-link" on:click={closeMenu}>Räume</a>
+		</div>
+
+		<div class="navbar-auth">
+			{#if $isLoading}
+				<span class="loading">Laden...</span>
+			{:else if $user}
+				<span class="user-name">{$user.name}</span>
+				<button class="btn btn-secondary" on:click={handleLogout}>Abmelden</button>
+			{:else}
+				<button class="btn btn-primary" on:click={handleLogin}>Anmelden</button>
+			{/if}
+		</div>
 	</div>
 </nav>
 
@@ -124,5 +142,90 @@
 
 	.btn-secondary:hover {
 		background-color: rgba(255, 255, 255, 0.1);
+	}
+
+	/* Hamburger menu */
+	.hamburger {
+		display: none;
+		flex-direction: column;
+		justify-content: space-around;
+		width: 24px;
+		height: 20px;
+		background: transparent;
+		border: none;
+		cursor: pointer;
+		padding: 0;
+		z-index: 10;
+	}
+
+	.hamburger span {
+		width: 100%;
+		height: 2px;
+		background-color: white;
+		transition: all 0.3s ease;
+		transform-origin: center;
+	}
+
+	.hamburger.open span:nth-child(1) {
+		transform: rotate(45deg) translate(5px, 5px);
+	}
+
+	.hamburger.open span:nth-child(2) {
+		opacity: 0;
+	}
+
+	.hamburger.open span:nth-child(3) {
+		transform: rotate(-45deg) translate(6px, -6px);
+	}
+
+	/* Mobile styles */
+	@media (max-width: 768px) {
+		.hamburger {
+			display: flex;
+		}
+
+		.navbar-content {
+			position: fixed;
+			top: 0;
+			right: -100%;
+			width: 70%;
+			max-width: 300px;
+			height: 100vh;
+			background-color: #1a1a2e;
+			flex-direction: column;
+			padding: 4rem 1.5rem 1.5rem;
+			transition: right 0.3s ease;
+			box-shadow: -2px 0 10px rgba(0, 0, 0, 0.3);
+			z-index: 5;
+		}
+
+		.navbar-content.open {
+			right: 0;
+		}
+
+		.navbar-menu {
+			flex-direction: column;
+			gap: 1rem;
+			margin-bottom: 2rem;
+		}
+
+		.navbar-link {
+			font-size: 1.1rem;
+			padding: 0.5rem 0;
+		}
+
+		.navbar-auth {
+			flex-direction: column;
+			gap: 0.75rem;
+		}
+
+		.user-name {
+			text-align: center;
+		}
+
+		.btn {
+			width: 100%;
+			text-align: center;
+		}
 	}
 </style>
