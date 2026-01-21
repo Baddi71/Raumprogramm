@@ -32,4 +32,49 @@
 		max-width: 1400px;
 		margin: 0 auto;
 	}
+
+	/* Large desktop */
+	@media (min-width: 1600px) {
+		.page-header {
+			padding: 2rem;
+		}
+
+		.page-header h1 {
+			font-size: 2rem;
+			max-width: 1600px;
+		}
+	}
+
+	/* Medium desktop */
+	@media (max-width: 1200px) {
+		.page-header {
+			padding: 1.25rem;
+		}
+
+		.page-header h1 {
+			font-size: 1.5rem;
+		}
+	}
+
+	/* Tablet */
+	@media (max-width: 768px) {
+		.page-header {
+			padding: 1rem;
+		}
+
+		.page-header h1 {
+			font-size: 1.35rem;
+		}
+	}
+
+	/* Mobile */
+	@media (max-width: 480px) {
+		.page-header {
+			padding: 0.875rem;
+		}
+
+		.page-header h1 {
+			font-size: 1.25rem;
+		}
+	}
 </style>
