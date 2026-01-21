@@ -1,0 +1,33 @@
+# Virtual environment
+.venv/
+venv/
+__pycache__/
+
+# Node
+node_modules/
+
+# Build outputs
+frontend/build/
+frontend/.svelte-kit/
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# Excel temp files
+*.xlsx
+*.docx
+*.surql
+
+# IDE
+.idea/
+.vscode/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Claude
+.claude/
