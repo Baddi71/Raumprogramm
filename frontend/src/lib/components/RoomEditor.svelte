@@ -747,6 +747,59 @@
 		min-height: 100px;
 	}
 
+	/* Large desktop */
+	@media (min-width: 1400px) {
+		.room-editor {
+			max-width: 1100px;
+			padding: 2rem;
+		}
+
+		.form-grid {
+			grid-template-columns: repeat(3, 1fr);
+			gap: 1.5rem;
+		}
+
+		.form-section {
+			padding: 2rem;
+		}
+
+		.editor-header h2 {
+			font-size: 1.75rem;
+		}
+	}
+
+	/* Medium desktop */
+	@media (max-width: 1200px) {
+		.room-editor {
+			max-width: 100%;
+			padding: 1.5rem;
+		}
+
+		.form-grid {
+			grid-template-columns: repeat(2, 1fr);
+		}
+	}
+
+	/* Small desktop / large tablet */
+	@media (max-width: 1024px) {
+		.room-editor {
+			padding: 1.25rem;
+		}
+
+		.form-section {
+			padding: 1.25rem;
+		}
+
+		.form-sections {
+			gap: 1.5rem;
+		}
+
+		.btn {
+			padding: 0.5rem 1rem;
+		}
+	}
+
+	/* Tablet */
 	@media (max-width: 768px) {
 		.room-editor {
 			padding: 1rem;
@@ -756,20 +809,33 @@
 			padding: 1rem;
 		}
 
-		.form-sections {
-			gap: 1.5rem;
+		.editor-header {
+			flex-direction: column;
+			gap: 0.75rem;
+			align-items: stretch;
+		}
+
+		.editor-actions {
+			display: grid;
+			grid-template-columns: 1fr 1fr;
+			gap: 0.5rem;
+		}
+
+		.tabs {
+			overflow-x: auto;
+			-webkit-overflow-scrolling: touch;
+		}
+
+		.tab {
+			white-space: nowrap;
+			padding: 0.75rem 1rem;
 		}
 	}
 
+	/* Mobile */
 	@media (max-width: 600px) {
 		.form-grid {
 			grid-template-columns: 1fr;
-		}
-
-		.editor-header {
-			flex-direction: column;
-			gap: 1rem;
-			align-items: stretch;
 		}
 
 		.editor-header h2 {
@@ -777,15 +843,11 @@
 		}
 
 		.editor-actions {
-			flex-direction: column;
+			grid-template-columns: 1fr;
 		}
 
 		.editor-actions .btn {
 			width: 100%;
-		}
-
-		.tabs {
-			flex-wrap: wrap;
 		}
 
 		.tab {
@@ -797,6 +859,26 @@
 
 		.form-section h3 {
 			font-size: 1rem;
+		}
+
+		.form-control {
+			padding: 0.5rem 0.75rem;
+		}
+	}
+
+	/* Small mobile */
+	@media (max-width: 400px) {
+		.room-editor {
+			padding: 0.75rem;
+		}
+
+		.form-section {
+			padding: 0.75rem;
+			border-radius: 6px;
+		}
+
+		.form-group label {
+			font-size: 0.85rem;
 		}
 	}
 </style>

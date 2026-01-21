@@ -52,6 +52,11 @@ html, body {
 	overflow-x: hidden;
 }
 
+/* Smooth scrolling */
+html {
+	scroll-behavior: smooth;
+}
+
 /* Utility classes */
 .sr-only {
 	position: absolute;
@@ -71,9 +76,90 @@ html, body {
 	padding: 0 1rem;
 }
 
-/* Mobile responsive typography */
+/* Responsive breakpoints */
+/* Large desktop: 1400px+ */
+@media (min-width: 1400px) {
+	html {
+		font-size: 17px;
+	}
+
+	.container {
+		max-width: 1400px;
+		padding: 0 2rem;
+	}
+}
+
+/* Extra large desktop: 1600px+ */
+@media (min-width: 1600px) {
+	html {
+		font-size: 18px;
+	}
+
+	.container {
+		max-width: 1600px;
+	}
+}
+
+/* Medium desktop: 1200px - 1400px */
+@media (max-width: 1400px) {
+	html {
+		font-size: 16px;
+	}
+}
+
+/* Small desktop: 1024px - 1200px */
+@media (max-width: 1200px) {
+	.container {
+		max-width: 100%;
+		padding: 0 1.5rem;
+	}
+}
+
+/* Tablet: 768px - 1024px */
+@media (max-width: 1024px) {
+	html {
+		font-size: 15px;
+	}
+
+	.container {
+		padding: 0 1rem;
+	}
+}
+
+/* Mobile: 600px - 768px */
+@media (max-width: 768px) {
+	html {
+		font-size: 15px;
+	}
+}
+
+/* Small mobile: 480px - 600px */
+@media (max-width: 600px) {
+	html {
+		font-size: 14px;
+	}
+
+	.container {
+		padding: 0 0.75rem;
+	}
+}
+
+/* Extra small mobile: < 480px */
 @media (max-width: 480px) {
 	html {
 		font-size: 14px;
+	}
+}
+
+/* Touch device optimizations */
+@media (hover: none) and (pointer: coarse) {
+	/* Larger touch targets */
+	button, a, input, select, textarea {
+		min-height: 44px;
+	}
+
+	/* Remove hover effects that don't work well on touch */
+	a:hover {
+		text-decoration: none;
 	}
 }

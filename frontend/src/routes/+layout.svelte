@@ -140,8 +140,48 @@ VITE_SURREAL_ENDPOINT=wss://your-instance.surreal.io/rpc</pre>
 		overflow-x: auto;
 	}
 
-	/* Mobile styles */
+	/* Large desktop */
+	@media (min-width: 1400px) {
+		.auth-required,
+		.loading-state,
+		.config-warning {
+			padding: 4rem;
+		}
+
+		.auth-required h2,
+		.config-warning h2 {
+			font-size: 1.75rem;
+		}
+
+		.auth-required p,
+		.config-warning p {
+			font-size: 1.1rem;
+			max-width: 600px;
+		}
+
+		.spinner {
+			width: 50px;
+			height: 50px;
+		}
+	}
+
+	/* Tablet */
 	@media (max-width: 768px) {
+		.auth-required,
+		.loading-state,
+		.config-warning {
+			padding: 2rem 1.5rem;
+			min-height: calc(100vh - 56px);
+		}
+
+		.auth-required h2,
+		.config-warning h2 {
+			font-size: 1.35rem;
+		}
+	}
+
+	/* Mobile */
+	@media (max-width: 600px) {
 		.auth-required,
 		.loading-state,
 		.config-warning {
@@ -156,6 +196,23 @@ VITE_SURREAL_ENDPOINT=wss://your-instance.surreal.io/rpc</pre>
 		.config-warning pre {
 			font-size: 0.75rem;
 			padding: 0.75rem;
+		}
+
+		.spinner {
+			width: 36px;
+			height: 36px;
+		}
+	}
+
+	/* Small mobile */
+	@media (max-width: 400px) {
+		.auth-required p,
+		.config-warning p {
+			font-size: 0.9rem;
+		}
+
+		.config-warning pre {
+			font-size: 0.7rem;
 		}
 	}
 </style>

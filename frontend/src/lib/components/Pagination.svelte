@@ -123,10 +123,34 @@
 		color: #6c757d;
 	}
 
-	/* Mobile styles */
+	/* Large desktop */
+	@media (min-width: 1400px) {
+		.page-btn {
+			min-width: 44px;
+			height: 44px;
+			font-size: 1rem;
+		}
+	}
+
+	/* Tablet */
+	@media (max-width: 768px) {
+		.pagination {
+			gap: 0.2rem;
+		}
+
+		.page-btn {
+			min-width: 38px;
+			height: 38px;
+			font-size: 0.875rem;
+		}
+	}
+
+	/* Mobile */
 	@media (max-width: 480px) {
 		.pagination {
 			gap: 0.125rem;
+			flex-wrap: wrap;
+			justify-content: center;
 		}
 
 		.page-btn {
@@ -138,6 +162,15 @@
 
 		.page-ellipsis {
 			padding: 0.25rem;
+		}
+	}
+
+	/* Small mobile */
+	@media (max-width: 360px) {
+		.page-btn {
+			min-width: 32px;
+			height: 32px;
+			font-size: 0.8rem;
 		}
 	}
 </style>
