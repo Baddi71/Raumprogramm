@@ -2,6 +2,7 @@
   import { onMount, createEventDispatcher } from "svelte";
   import { db } from "../lib/surreal";
   import CategoryEditor from "./CategoryEditor.svelte";
+  import StatusSelect from "./StatusSelect.svelte";
 
   export let id;
   const dispatch = createEventDispatcher();
@@ -81,8 +82,9 @@
           />
         </div>
         <div class="input-field">
-          <label for="room-status">Status</label>
-          <input id="room-status" bind:value={room.categories.info.status} />
+          <label for="status-select">Status</label>
+          <!-- Using a wrapper div to avoid A11y label issues since custom component handles its own ID internally or via prop -->
+          <StatusSelect bind:value={room.categories.info.status} />
         </div>
       </div>
     </div>
