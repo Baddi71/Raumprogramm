@@ -5,15 +5,15 @@
   export let logout;
   export let isAuthenticated; // Store
 
-  let theme = "dark";
+  let theme = "light";
 
   onMount(() => {
     // Check local storage or system preference
     const savedTheme = localStorage.getItem("theme");
     if (savedTheme) {
       theme = savedTheme;
-    } else if (window.matchMedia("(prefers-color-scheme: light)").matches) {
-      theme = "light";
+    } else if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+      theme = "dark";
     }
 
     applyTheme(theme);
@@ -26,8 +26,8 @@
   }
 
   function applyTheme(newTheme) {
-    if (newTheme === "light") {
-      document.documentElement.setAttribute("data-theme", "light");
+    if (newTheme === "dark") {
+      document.documentElement.setAttribute("data-theme", "dark");
     } else {
       document.documentElement.removeAttribute("data-theme");
     }
