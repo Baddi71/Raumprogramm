@@ -1,29 +1,44 @@
-
--- Authentifizierung mit Microsoft Entra ID (Azure AD) konfigurieren
-
--- BITTE ERSETZEN SIE DIE PLATZHALTER:
--- <TENANT_ID> : Ihre Verzeichnis (Mandanten) ID (Directory ID) aus Azure
--- <CLIENT_ID> : Ihre Anwendungs (Client) ID aus der App Registration
+-- Permissions: TESTWEISE FULL für alles, um Permission-Probleme auszuschließen
+DEFINE TABLE user SCHEMALESS
+    PERMISSIONS 
+        FOR select, update, delete, create WHERE FULL;
 
 -- 1. Definition des Zugriffs über JWT (JSON Web Tokens)
--- SurrealDB lädt die öffentlichen Schlüssel automatisch von Microsoft herunter.
-DEFINE ACCESS entra_users ON DATABASE TYPE JWT 
-    URL "https://login.microsoftonline.com/<TENANT_ID>/discovery/v2.0/keys";
+-- TYPE RECORD mapped das Token auf einen User-Record (user:<sub>)
+-- Der Name des Access bestimmt die Tabelle (hier: 'user')
+DEFINE ACCESS user ON DATABASE TYPE RECORD
+    WITH JWT 
+    URL "https://login.microsoftonline.com/common/discovery/keys" 
+    AUTHENTICATE {
+        -- 1. Claims prüfen
+        IF $token.iss != "https://sts.windows.net/55b4a26c-3686-4d33-b09c-cbc23b7d396c/" {
+            THROW "Invalid Issuer";
+        };
+        IF $token.aud != "f4e6ee3d-cd12-4dca-b884-a9b4bdda8b10" {
+            THROW "Invalid Audience";
+        };
+
+        -- 2. User Record sicherstellen (Upsert / Update)
+        -- Wir nutzen UPDATE statt CREATE, um Fehler bei Existenz zu vermeiden.
+        -- UPDATE erstellt den Record, falls er nicht existiert (wenn Content gesetzt wird).
+        LET $u_id_sub = type::thing("user", $token.sub);
+
+        UPDATE $u_id_sub CONTENT {
+            name: $token.name,
+            email: $token.email,
+            last_login: time::now(),
+            roles: $token.roles
+        };
+        
+        RETURN true;
+    };
 
 -- 2. Rechte für die Tabelle "raumtypen" einschränken
--- Nur Benutzer mit gültigem Token aus Ihrem Tenant und für Ihre App dürfen zugreifen.
+-- Zugriff erlaubt wenn über 'user' authentifiziert.
+-- (Weitere Claims wurden bereits im AUTHENTICATE Block geprüft)
 DEFINE TABLE raumtypen SCHEMALESS
     PERMISSIONS
         FOR select, create, update, delete
-        WHERE 
-            -- Der Zugriff muss über den oben definierten Access erfolgen
-            $access = "entra_users"
-            
-            -- OPTIONAL: Sicherstellen, dass das Token vom richtigen Tenant stammt (aus dem Token Claim 'tid')
-            AND $token.tid = "<TENANT_ID>"
-            
-            -- WICHTIG: Sicherstellen, dass das Token für DIESE Anwendung ausgestellt wurde (aus Claim 'aud')
-            -- Verhindert, dass Token anderer Apps in demselben Tenant genutzt werden können (sofern nicht gewollt)
-            AND $token.aud = "<CLIENT_ID>";
+        WHERE $access = "user";
 
-COMMIT;
+

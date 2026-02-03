@@ -106,12 +106,9 @@ with open(file_path, 'r', encoding='utf-8-sig') as f:
             if parsed_val is None:
                 continue
 
+
             if category == 'general':
                 # mapping specific general keys to top level or keeping in general
-                # let's put them in top level for easier access, or in 'general' object
-                # User wants "categories", so maybe everything in categories?
-                # But NC Code etc are identifiers.
-                if i == 0: data['id'] = record_id 
                 # We also store them as fields
                 data[key] = parsed_val
             else:
