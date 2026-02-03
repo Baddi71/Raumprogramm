@@ -229,6 +229,7 @@
   .input-group {
     display: flex;
     gap: 0.5rem;
+    align-items: center;
   }
 
   .input-group input {
@@ -240,6 +241,7 @@
     color: var(--text-primary);
     font-family: inherit;
     transition: all 0.2s ease;
+    min-width: 0; /* Prevents flex item from overflowing */
   }
 
   .input-group input:focus {
@@ -263,6 +265,7 @@
     align-items: center;
     justify-content: center;
     padding: 0;
+    flex-shrink: 0;
   }
 
   .delete-btn:hover {
