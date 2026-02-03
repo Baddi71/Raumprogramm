@@ -7,7 +7,9 @@ export const msalConfig = {
     auth: {
         clientId: "f4e6ee3d-cd12-4dca-b884-a9b4bdda8b10", // Replace with your ID
         authority: "https://login.microsoftonline.com/55b4a26c-3686-4d33-b09c-cbc23b7d396c", // Replace with your ID
-        redirectUri: "http://localhost:5173" // Vite default port
+        redirectUri: import.meta.env.DEV
+            ? "http://localhost:5173"
+            : "https://Baddi71.github.io/Raumprogramm" // Update this in Azure Portal if needed
     },
     cache: {
         cacheLocation: "sessionStorage",

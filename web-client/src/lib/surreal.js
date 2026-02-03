@@ -20,8 +20,8 @@ export async function connectDB(token) {
         // We only reach this point if the frontend user is logged in via Microsoft (see App.svelte)
         console.log("Connecting to DB as technical user...");
         await db.signin({
-            username: 'app_writer',
-            password: 'Raumprogramm2024!',
+            username: import.meta.env.VITE_DB_USER,
+            password: import.meta.env.VITE_DB_PASS,
             namespace: 'test',
             database: 'test',
         });

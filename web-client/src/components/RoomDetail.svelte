@@ -3,32 +3,61 @@
   import { db } from "../lib/surreal";
   import CategoryEditor from "./CategoryEditor.svelte";
   import StatusSelect from "./StatusSelect.svelte";
+  import MarkdownEditor from "./MarkdownEditor.svelte";
 
   export let id;
   const dispatch = createEventDispatcher();
 
   let room = null;
+  let originalRoom = null; // To track changes
   let loading = true;
   let saving = false;
 
-  onMount(async () => {
-    try {
-      const result = await db.select(id);
-      room = Array.isArray(result) ? result[0] : result;
+  // Simple deep comparison to check for changes
+  $: isDirty =
+    room && originalRoom ? JSON.stringify(room) !== originalRoom : false;
 
-      if (!room.categories) room.categories = {};
-    } catch (e) {
-      console.error(e);
-      alert("Fehler: " + e.message);
-    } finally {
-      loading = false;
+  // Browser navigation guard
+  function handleBeforeUnload(event) {
+    if (isDirty) {
+      event.preventDefault();
+      event.returnValue = ""; // Standard for Chrome/modern browsers
+      return "";
     }
+  }
+
+  onMount(() => {
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    (async () => {
+      try {
+        const result = await db.select(id);
+        room = Array.isArray(result) ? result[0] : result;
+
+        if (!room.categories) room.categories = {};
+        if (!room.description) room.description = "";
+
+        // Store initial state as string for easy comparison
+        originalRoom = JSON.stringify(room);
+      } catch (e) {
+        console.error(e);
+        alert("Fehler: " + e.message);
+      } finally {
+        loading = false;
+      }
+    })();
+
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
   });
 
   async function save() {
     saving = true;
     try {
       await db.update(id, room);
+      // Update original state after successful save
+      originalRoom = JSON.stringify(room);
       alert("Erfolgreich gespeichert!");
     } catch (e) {
       console.error(e);
@@ -39,6 +68,15 @@
   }
 
   function goBack() {
+    if (isDirty) {
+      if (
+        !confirm(
+          "Es gibt ungespeicherte Änderungen. Möchten Sie die Seite wirklich verlassen?",
+        )
+      ) {
+        return;
+      }
+    }
     dispatch("back");
   }
 </script>
@@ -62,7 +100,7 @@
       <p class="code">Code: {room.nc_code_7_stellig}</p>
     </div>
 
-    <div class="section glass-panel">
+    <div class="section glass-panel" style="position: relative; z-index: 10;">
       <h3>Stammdaten</h3>
       <div class="input-grid">
         <div class="input-field">
@@ -87,6 +125,10 @@
           <StatusSelect bind:value={room.categories.info.status} />
         </div>
       </div>
+    </div>
+    <div class="section glass-panel">
+      <h3>Beschreibung</h3>
+      <MarkdownEditor bind:value={room.description} />
     </div>
 
     <div class="categories-section">
@@ -197,6 +239,7 @@
     color: var(--text-secondary);
     text-transform: uppercase;
     letter-spacing: 0.05em;
+    transition: color 0.2s ease;
   }
 
   .input-field input {
@@ -212,7 +255,12 @@
   .input-field input:focus {
     outline: none;
     border-color: var(--primary);
-    background: rgba(255, 255, 255, 0.08);
+    background: rgba(255, 255, 255, 0.1);
+    box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.2);
+  }
+
+  .input-field:focus-within label {
+    color: var(--primary);
   }
 
   .categories-section {
