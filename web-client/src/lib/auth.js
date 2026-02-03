@@ -9,7 +9,7 @@ export const msalConfig = {
         authority: "https://login.microsoftonline.com/55b4a26c-3686-4d33-b09c-cbc23b7d396c", // Replace with your ID
         redirectUri: import.meta.env.DEV
             ? "http://localhost:5173"
-            : "https://Baddi71.github.io/Raumprogramm/" // Update this in Azure Portal if needed
+            : "http://raumprogramm.u2projektagentur.de/" // Update this in Azure Portal if needed
     },
     cache: {
         cacheLocation: "sessionStorage",
