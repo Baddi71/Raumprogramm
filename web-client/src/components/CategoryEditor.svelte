@@ -1,23 +1,98 @@
 <script>
   import ConfirmDialog from "./ConfirmDialog.svelte";
+  import { db } from "../lib/surreal";
 
   export let categoryData = {};
   export let title = "";
+  export let currentRoomId = null;
+  export let categoryName = "";
 
   let newKey = "";
   let showDeleteConfirm = false;
   let keyToDelete = "";
+  let addToAllRoomTypes = false;
+  let isAddingToAll = false;
 
-  function addParam() {
+  async function addParam() {
     if (!newKey) return;
     const key = newKey.trim().toLowerCase().replace(/ /g, "_");
+
     if (Object.prototype.hasOwnProperty.call(categoryData, key)) {
       alert("Parameter existiert bereits");
       return;
     }
+
+    // Add to current room
     categoryData[key] = 0;
     categoryData = categoryData;
+
+    // If "add to all" is checked, add to all other room types
+    if (addToAllRoomTypes && currentRoomId && categoryName) {
+      isAddingToAll = true;
+      try {
+        // Fetch all room types
+        const allRooms = await db.select("raumtypen");
+
+        let successCount = 0;
+        let errorCount = 0;
+        const errors = [];
+
+        // Update each room type (except the current one)
+        for (const room of allRooms) {
+          if (room.id === currentRoomId) continue;
+
+          try {
+            // Ensure the room has the categories structure
+            if (!room.categories) room.categories = {};
+            if (!room.categories[categoryName])
+              room.categories[categoryName] = {};
+
+            // Skip if property already exists in this room
+            if (
+              Object.prototype.hasOwnProperty.call(
+                room.categories[categoryName],
+                key,
+              )
+            ) {
+              continue;
+            }
+
+            // Add the property
+            room.categories[categoryName][key] = 0;
+
+            // Update the room in the database
+            await db.update(room.id, room);
+            successCount++;
+          } catch (err) {
+            errorCount++;
+            errors.push(`${room.nc_bezeichnung || room.id}: ${err.message}`);
+          }
+        }
+
+        // Show result message
+        if (errorCount === 0) {
+          alert(
+            `Parameter "${key}" wurde erfolgreich zu ${successCount + 1} Raumtypen hinzugefügt!`,
+          );
+        } else {
+          alert(
+            `Parameter "${key}" wurde zu ${successCount + 1} Raumtypen hinzugefügt.\n` +
+              `${errorCount} Fehler aufgetreten:\n${errors.slice(0, 3).join("\n")}` +
+              (errors.length > 3
+                ? `\n... und ${errors.length - 3} weitere`
+                : ""),
+          );
+        }
+      } catch (err) {
+        console.error("Error adding parameter to all room types:", err);
+        alert(`Fehler beim Hinzufügen zu allen Raumtypen: ${err.message}`);
+      } finally {
+        isAddingToAll = false;
+      }
+    }
+
     newKey = "";
+    addToAllRoomTypes = false;
   }
 
   function promptDelete(key) {
@@ -46,9 +121,9 @@
   <div class="params-grid">
     {#each Object.entries(categoryData) as [key, val]}
       <div class="param-card">
-        <label>{key.replace(/_/g, " ")}</label>
+        <label for={`param-${key}`}>{key.replace(/_/g, " ")}</label>
         <div class="input-group">
-          <input bind:value={categoryData[key]} />
+          <input id={`param-${key}`} bind:value={categoryData[key]} />
           <button
             class="delete-btn"
             on:click={() => promptDelete(key)}
@@ -65,10 +140,32 @@
     <input
       placeholder="Neuer Parameter..."
       bind:value={newKey}
-      on:keydown={(e) => e.key === "Enter" && addParam()}
+      on:keydown={(e) => e.key === "Enter" && !isAddingToAll && addParam()}
+      disabled={isAddingToAll}
     />
-    <button class="btn-secondary" on:click={addParam}>Hinzufügen</button>
+    <button class="btn-secondary" on:click={addParam} disabled={isAddingToAll}>
+      {isAddingToAll ? "Wird hinzugefügt..." : "Hinzufügen"}
+    </button>
   </div>
+
+  {#if currentRoomId && categoryName}
+    <div class="bulk-option">
+      <label class="checkbox-label">
+        <input
+          type="checkbox"
+          bind:checked={addToAllRoomTypes}
+          disabled={isAddingToAll}
+        />
+        <span>Zu allen Raumtypen hinzufügen</span>
+      </label>
+      {#if isAddingToAll}
+        <div class="loading-indicator">
+          <div class="mini-spinner"></div>
+          <span>Wird zu allen Raumtypen hinzugefügt...</span>
+        </div>
+      {/if}
+    </div>
+  {/if}
 </div>
 
 <ConfirmDialog
@@ -193,5 +290,75 @@
   .add-param input:focus {
     outline: none;
     border-color: var(--primary);
+  }
+
+  .add-param input:disabled,
+  .add-param button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .bulk-option {
+    margin-top: 0.75rem;
+    padding-top: 0.75rem;
+    border-top: 1px dashed rgba(255, 255, 255, 0.1);
+  }
+
+  .checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    user-select: none;
+  }
+
+  .checkbox-label input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+    accent-color: var(--primary);
+  }
+
+  .checkbox-label input[type="checkbox"]:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+
+  .checkbox-label span {
+    transition: color 0.2s ease;
+  }
+
+  .checkbox-label:hover span {
+    color: var(--text-primary);
+  }
+
+  .loading-indicator {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+    padding: 0.5rem;
+    background: rgba(168, 85, 247, 0.1);
+    border: 1px solid rgba(168, 85, 247, 0.3);
+    border-radius: var(--radius-md);
+    font-size: 0.8rem;
+    color: var(--primary);
+  }
+
+  .mini-spinner {
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top-color: var(--primary);
+    animation: spin 1s ease-in-out infinite;
+  }
+
+  @keyframes spin {
+    to {
+      transform: rotate(360deg);
+    }
   }
 </style>

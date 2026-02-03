@@ -65,20 +65,24 @@
       <h3>Stammdaten</h3>
       <div class="input-grid">
         <div class="input-field">
-          <label>Raumbezeichnung</label>
-          <input bind:value={room.raum_bezeichnung} />
+          <label for="room-name">Raumbezeichnung</label>
+          <input id="room-name" bind:value={room.raum_bezeichnung} />
         </div>
         <div class="input-field">
-          <label>Raumtyp</label>
-          <input bind:value={room.raumtyp} />
+          <label for="room-type">Raumtyp</label>
+          <input id="room-type" bind:value={room.raumtyp} />
         </div>
         <div class="input-field">
-          <label>Anzahl Räume</label>
-          <input type="number" bind:value={room.anzahl_räume_summe} />
+          <label for="room-count">Anzahl Räume</label>
+          <input
+            id="room-count"
+            type="number"
+            bind:value={room.anzahl_räume_summe}
+          />
         </div>
         <div class="input-field">
-          <label>Status</label>
-          <input bind:value={room.categories.info.status} />
+          <label for="room-status">Status</label>
+          <input id="room-status" bind:value={room.categories.info.status} />
         </div>
       </div>
     </div>
@@ -91,6 +95,8 @@
             <CategoryEditor
               bind:categoryData={room.categories[catName]}
               title={catName}
+              currentRoomId={id}
+              categoryName={catName}
             />
           {/if}
         {/each}
