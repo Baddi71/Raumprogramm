@@ -71,10 +71,14 @@
         <tbody>
           {#each rooms as room}
             <tr>
-              <td class="code">{room.nc_code_7_stellig || room.id}</td>
-              <td class="name">{room.nc_bezeichnung}</td>
-              <td>{room.raumtyp}</td>
-              <td>
+              <td class="code" data-label="NC Code"
+                >{room.nc_code_7_stellig || room.id}</td
+              >
+              <td class="name" data-label="Bezeichnung"
+                >{room.nc_bezeichnung}</td
+              >
+              <td data-label="Raumtyp">{room.raumtyp}</td>
+              <td data-label="Status">
                 <span
                   class="status-badge {getStatusClass(
                     room.categories?.info?.status,
@@ -83,7 +87,7 @@
                   {getStatusLabel(room.categories?.info?.status)}
                 </span>
               </td>
-              <td>
+              <td data-label="Aktion">
                 <button
                   class="btn-icon"
                   on:click={() => selectRoom(room.id)}
@@ -237,7 +241,7 @@
 
   .status-pending {
     background: rgba(148, 163, 184, 0.2);
-    color: #cbd5e1;
+    color: var(--text-muted);
     border: 1px solid rgba(148, 163, 184, 0.3);
   }
 
@@ -268,5 +272,58 @@
     background: rgba(255, 255, 255, 0.1);
     color: var(--primary);
     transform: translateY(-1px);
+  }
+
+  @media (max-width: 768px) {
+    thead {
+      display: none;
+    }
+
+    table,
+    tbody,
+    tr,
+    td {
+      display: block;
+      width: 100%;
+    }
+
+    tr {
+      margin-bottom: 1rem;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      border: 1px solid var(--glass-border);
+    }
+
+    tbody tr:hover {
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    td {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      text-align: right;
+    }
+
+    td::before {
+      content: attr(data-label);
+      font-weight: 600;
+      color: var(--text-muted);
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      margin-right: 1rem;
+    }
+
+    td:last-child {
+      border-bottom: none;
+      justify-content: flex-end;
+    }
+
+    td:last-child::before {
+      display: none;
+    }
   }
 </style>
