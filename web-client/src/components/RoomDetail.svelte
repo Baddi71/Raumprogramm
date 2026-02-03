@@ -3,6 +3,7 @@
   import { db } from "../lib/surreal";
   import CategoryEditor from "./CategoryEditor.svelte";
   import StatusSelect from "./StatusSelect.svelte";
+  import MarkdownEditor from "./MarkdownEditor.svelte";
 
   export let id;
   const dispatch = createEventDispatcher();
@@ -17,6 +18,7 @@
       room = Array.isArray(result) ? result[0] : result;
 
       if (!room.categories) room.categories = {};
+      if (!room.description) room.description = "";
     } catch (e) {
       console.error(e);
       alert("Fehler: " + e.message);
@@ -87,6 +89,10 @@
           <StatusSelect bind:value={room.categories.info.status} />
         </div>
       </div>
+    </div>
+    <div class="section glass-panel">
+      <h3>Beschreibung</h3>
+      <MarkdownEditor bind:value={room.description} />
     </div>
 
     <div class="categories-section">
