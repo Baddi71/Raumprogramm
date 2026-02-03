@@ -82,7 +82,11 @@
         </div>
         <div class="input-field">
           <label for="room-status">Status</label>
-          <input id="room-status" bind:value={room.categories.info.status} />
+          <select id="room-status" bind:value={room.categories.info.status}>
+            <option value="pending">Nicht begonnen</option>
+            <option value="in_progress">In Bearbeitung</option>
+            <option value="completed">Abgeschlossen</option>
+          </select>
         </div>
       </div>
     </div>
@@ -197,7 +201,8 @@
     letter-spacing: 0.05em;
   }
 
-  .input-field input {
+  .input-field input,
+  .input-field select {
     padding: 0.75rem 1rem;
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid var(--glass-border);
@@ -207,7 +212,13 @@
     transition: all 0.2s ease;
   }
 
-  .input-field input:focus {
+  .input-field select option {
+    background: var(--bg-core);
+    color: var(--text-primary);
+  }
+
+  .input-field input:focus,
+  .input-field select:focus {
     outline: none;
     border-color: var(--primary);
     background: rgba(255, 255, 255, 0.08);

@@ -21,6 +21,28 @@
   function selectRoom(id) {
     dispatch("select", id);
   }
+
+  function getStatusLabel(status) {
+    switch (status) {
+      case "in_progress":
+        return "In Bearbeitung";
+      case "completed":
+        return "Abgeschlossen";
+      default:
+        return "Nicht begonnen";
+    }
+  }
+
+  function getStatusClass(status) {
+    switch (status) {
+      case "in_progress":
+        return "status-progress";
+      case "completed":
+        return "status-completed";
+      default:
+        return "status-pending";
+    }
+  }
 </script>
 
 {#if loading}
@@ -42,6 +64,7 @@
             <th>NC Code</th>
             <th>Bezeichnung</th>
             <th>Raumtyp</th>
+            <th>Status</th>
             <th>Aktion</th>
           </tr>
         </thead>
@@ -51,6 +74,15 @@
               <td class="code">{room.nc_code_7_stellig || room.id}</td>
               <td class="name">{room.nc_bezeichnung}</td>
               <td>{room.raumtyp}</td>
+              <td>
+                <span
+                  class="status-badge {getStatusClass(
+                    room.categories?.info?.status,
+                  )}"
+                >
+                  {getStatusLabel(room.categories?.info?.status)}
+                </span>
+              </td>
               <td>
                 <button
                   class="btn-secondary"
@@ -173,5 +205,33 @@
 
   .name {
     font-weight: 500;
+  }
+
+  .status-badge {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .status-pending {
+    background: rgba(148, 163, 184, 0.2);
+    color: #cbd5e1;
+    border: 1px solid rgba(148, 163, 184, 0.3);
+  }
+
+  .status-progress {
+    background: rgba(59, 130, 246, 0.2);
+    color: #60a5fa;
+    border: 1px solid rgba(59, 130, 246, 0.3);
+  }
+
+  .status-completed {
+    background: rgba(16, 185, 129, 0.2);
+    color: #34d399;
+    border: 1px solid rgba(16, 185, 129, 0.3);
   }
 </style>
