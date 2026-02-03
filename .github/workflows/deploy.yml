@@ -35,6 +35,9 @@ jobs:
       - name: Build
         run: npm run build
         working-directory: ./web-client
+        env:
+          VITE_DB_USER: ${{ secrets.VITE_DB_USER }}
+          VITE_DB_PASS: ${{ secrets.VITE_DB_PASS }}
 
       - name: Setup Pages
         uses: actions/configure-pages@v4

@@ -1,0 +1,9 @@
+# Ignore everything
+/*
+
+# Whitelist directories
+!/web-client
+!/.github
+
+# Whitelist self
+!/.gitignore
