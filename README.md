@@ -1,3 +1,4 @@
+[![Deploy to GitHub Pages](https://github.com/Baddi71/Raumprogramm/actions/workflows/deploy.yml/badge.svg)](https://github.com/Baddi71/Raumprogramm/actions/workflows/deploy.yml)
 
 # Raumprogramm für SurrealDB
 
