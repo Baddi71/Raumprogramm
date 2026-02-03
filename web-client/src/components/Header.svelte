@@ -1,6 +1,5 @@
 <script>
   export let user; // Store
-  export let login;
   export let logout;
   export let isAuthenticated; // Store
 </script>
