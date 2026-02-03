@@ -1,8 +1,12 @@
 <script>
+  import ConfirmDialog from "./ConfirmDialog.svelte";
+
   export let categoryData = {};
   export let title = "";
 
   let newKey = "";
+  let showDeleteConfirm = false;
+  let keyToDelete = "";
 
   function addParam() {
     if (!newKey) return;
@@ -16,9 +20,23 @@
     newKey = "";
   }
 
-  function removeParam(key) {
-    delete categoryData[key];
-    categoryData = categoryData;
+  function promptDelete(key) {
+    keyToDelete = key;
+    showDeleteConfirm = true;
+  }
+
+  function confirmDelete() {
+    if (keyToDelete) {
+      delete categoryData[keyToDelete];
+      categoryData = categoryData;
+      keyToDelete = "";
+    }
+    showDeleteConfirm = false;
+  }
+
+  function cancelDelete() {
+    keyToDelete = "";
+    showDeleteConfirm = false;
   }
 </script>
 
@@ -33,7 +51,7 @@
           <input bind:value={categoryData[key]} />
           <button
             class="delete-btn"
-            on:click={() => removeParam(key)}
+            on:click={() => promptDelete(key)}
             title="Löschen"
           >
             ×
@@ -52,6 +70,19 @@
     <button class="btn-secondary" on:click={addParam}>Hinzufügen</button>
   </div>
 </div>
+
+<ConfirmDialog
+  isOpen={showDeleteConfirm}
+  title="Parameter löschen"
+  message="Möchten Sie den Parameter '{keyToDelete.replace(
+    /_/g,
+    ' ',
+  )}' wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden."
+  confirmText="Löschen"
+  cancelText="Abbrechen"
+  onConfirm={confirmDelete}
+  onCancel={cancelDelete}
+/>
 
 <style>
   .category-box {
