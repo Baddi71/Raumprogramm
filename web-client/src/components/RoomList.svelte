@@ -43,6 +43,48 @@
         return "status-pending";
     }
   }
+
+  // Filtering and Sorting
+  let searchQuery = "";
+  let sortField = "nc_code_7_stellig";
+  let sortDirection = "asc";
+
+  $: filteredRooms = rooms
+    .filter((room) => {
+      if (!searchQuery) return true;
+      const query = searchQuery.toLowerCase();
+      return (
+        (room.nc_code_7_stellig || "").toLowerCase().includes(query) ||
+        (room.nc_bezeichnung || "").toLowerCase().includes(query) ||
+        (room.raumtyp || "").toLowerCase().includes(query)
+      );
+    })
+    .sort((a, b) => {
+      let fieldA = a[sortField];
+      let fieldB = b[sortField];
+
+      // Handle nested properties if needed, e.g. status
+      if (sortField === "status") {
+        fieldA = a.categories?.info?.status || "";
+        fieldB = b.categories?.info?.status || "";
+      }
+
+      if (!fieldA) fieldA = "";
+      if (!fieldB) fieldB = "";
+
+      if (fieldA < fieldB) return sortDirection === "asc" ? -1 : 1;
+      if (fieldA > fieldB) return sortDirection === "asc" ? 1 : -1;
+      return 0;
+    });
+
+  function handleSort(field) {
+    if (sortField === field) {
+      sortDirection = sortDirection === "asc" ? "desc" : "asc";
+    } else {
+      sortField = field;
+      sortDirection = "asc";
+    }
+  }
 </script>
 
 {#if loading}
@@ -53,23 +95,75 @@
 {:else}
   <div class="room-list-container">
     <div class="header-section">
-      <h2>Raumtypen</h2>
-      <p class="subtitle">{rooms.length} Räume gefunden</p>
+      <div class="title-row">
+        <h2>Raumtypen</h2>
+        <p class="subtitle">{filteredRooms.length} Räume gefunden</p>
+      </div>
+      <div class="search-sort-controls">
+        <div class="search-box">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+          <input type="text" placeholder="Suchen..." bind:value={searchQuery} />
+        </div>
+      </div>
     </div>
 
     <div class="table-wrapper glass-panel">
       <table>
         <thead>
           <tr>
-            <th>NC Code</th>
-            <th>Bezeichnung</th>
-            <th>Raumtyp</th>
-            <th>Status</th>
+            <th
+              class="sortable"
+              on:click={() => handleSort("nc_code_7_stellig")}
+            >
+              NC Code
+              {#if sortField === "nc_code_7_stellig"}
+                <span class="sort-icon"
+                  >{sortDirection === "asc" ? "↑" : "↓"}</span
+                >
+              {/if}
+            </th>
+            <th class="sortable" on:click={() => handleSort("nc_bezeichnung")}>
+              Bezeichnung
+              {#if sortField === "nc_bezeichnung"}
+                <span class="sort-icon"
+                  >{sortDirection === "asc" ? "↑" : "↓"}</span
+                >
+              {/if}
+            </th>
+            <th class="sortable" on:click={() => handleSort("raumtyp")}>
+              Raumtyp
+              {#if sortField === "raumtyp"}
+                <span class="sort-icon"
+                  >{sortDirection === "asc" ? "↑" : "↓"}</span
+                >
+              {/if}
+            </th>
+            <th class="sortable" on:click={() => handleSort("status")}>
+              Status
+              {#if sortField === "status"}
+                <span class="sort-icon"
+                  >{sortDirection === "asc" ? "↑" : "↓"}</span
+                >
+              {/if}
+            </th>
             <th>Aktion</th>
           </tr>
         </thead>
         <tbody>
-          {#each rooms as room}
+          {#each filteredRooms as room (room.id)}
             <tr>
               <td class="code" data-label="NC Code"
                 >{room.nc_code_7_stellig || room.id}</td
@@ -154,6 +248,45 @@
 
   .header-section {
     margin-bottom: 0.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .title-row {
+    flex: 1;
+  }
+
+  .search-box {
+    position: relative;
+    width: 250px;
+  }
+
+  .search-box svg {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-muted);
+    pointer-events: none;
+  }
+
+  .search-box input {
+    width: 100%;
+    padding: 0.5rem 0.5rem 0.5rem 2.25rem;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--glass-border);
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--text-primary);
+    outline: none;
+    transition: all 0.2s ease;
+  }
+
+  .search-box input:focus {
+    border-color: var(--primary);
+    background: rgba(255, 255, 255, 0.1);
   }
 
   h2 {
@@ -199,6 +332,23 @@
     letter-spacing: 0.05em;
     color: var(--text-secondary);
     border-bottom: 1px solid var(--glass-border);
+    user-select: none;
+  }
+
+  th.sortable {
+    cursor: pointer;
+    transition: color 0.2s;
+  }
+
+  th.sortable:hover {
+    color: var(--primary);
+    background: rgba(255, 255, 255, 0.02);
+  }
+
+  .sort-icon {
+    display: inline-block;
+    margin-left: 0.5rem;
+    color: var(--primary);
   }
 
   td {
