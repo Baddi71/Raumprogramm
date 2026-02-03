@@ -9,28 +9,55 @@
   const dispatch = createEventDispatcher();
 
   let room = null;
+  let originalRoom = null; // To track changes
   let loading = true;
   let saving = false;
 
-  onMount(async () => {
-    try {
-      const result = await db.select(id);
-      room = Array.isArray(result) ? result[0] : result;
+  // Simple deep comparison to check for changes
+  $: isDirty =
+    room && originalRoom ? JSON.stringify(room) !== originalRoom : false;
 
-      if (!room.categories) room.categories = {};
-      if (!room.description) room.description = "";
-    } catch (e) {
-      console.error(e);
-      alert("Fehler: " + e.message);
-    } finally {
-      loading = false;
+  // Browser navigation guard
+  function handleBeforeUnload(event) {
+    if (isDirty) {
+      event.preventDefault();
+      event.returnValue = ""; // Standard for Chrome/modern browsers
+      return "";
     }
+  }
+
+  onMount(() => {
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    (async () => {
+      try {
+        const result = await db.select(id);
+        room = Array.isArray(result) ? result[0] : result;
+
+        if (!room.categories) room.categories = {};
+        if (!room.description) room.description = "";
+
+        // Store initial state as string for easy comparison
+        originalRoom = JSON.stringify(room);
+      } catch (e) {
+        console.error(e);
+        alert("Fehler: " + e.message);
+      } finally {
+        loading = false;
+      }
+    })();
+
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
   });
 
   async function save() {
     saving = true;
     try {
       await db.update(id, room);
+      // Update original state after successful save
+      originalRoom = JSON.stringify(room);
       alert("Erfolgreich gespeichert!");
     } catch (e) {
       console.error(e);
@@ -41,6 +68,15 @@
   }
 
   function goBack() {
+    if (isDirty) {
+      if (
+        !confirm(
+          "Es gibt ungespeicherte Änderungen. Möchten Sie die Seite wirklich verlassen?",
+        )
+      ) {
+        return;
+      }
+    }
     dispatch("back");
   }
 </script>
