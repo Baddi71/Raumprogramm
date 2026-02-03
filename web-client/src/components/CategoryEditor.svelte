@@ -235,8 +235,8 @@
   .input-group input {
     flex: 1;
     padding: 0.5rem 0.75rem;
-    background: rgba(0, 0, 0, 0.2);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--glass-border);
     border-radius: var(--radius-md);
     color: var(--text-primary);
     font-family: inherit;
@@ -247,7 +247,7 @@
   .input-group input:focus {
     outline: none;
     border-color: var(--primary);
-    background: rgba(0, 0, 0, 0.3);
+    background: rgba(255, 255, 255, 0.1);
   }
 
   .delete-btn {
