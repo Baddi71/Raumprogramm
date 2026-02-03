@@ -100,7 +100,7 @@
       <p class="code">Code: {room.nc_code_7_stellig}</p>
     </div>
 
-    <div class="section glass-panel">
+    <div class="section glass-panel" style="position: relative; z-index: 10;">
       <h3>Stammdaten</h3>
       <div class="input-grid">
         <div class="input-field">
