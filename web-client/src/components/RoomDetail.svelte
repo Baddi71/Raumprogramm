@@ -197,6 +197,7 @@
     color: var(--text-secondary);
     text-transform: uppercase;
     letter-spacing: 0.05em;
+    transition: color 0.2s ease;
   }
 
   .input-field input {
@@ -212,7 +213,12 @@
   .input-field input:focus {
     outline: none;
     border-color: var(--primary);
-    background: rgba(255, 255, 255, 0.08);
+    background: rgba(255, 255, 255, 0.1);
+    box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.2);
+  }
+
+  .input-field:focus-within label {
+    color: var(--primary);
   }
 
   .categories-section {
