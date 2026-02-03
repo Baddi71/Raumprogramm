@@ -18,19 +18,6 @@
   </div>
 </header>
 
-<header class="glass-panel">
-  <div class="logo text-gradient">Raumprogramm DB</div>
-  <div class="user-actions">
-    {#if $isAuthenticated}
-      <div class="user-pill">
-        <span class="avatar">{$user?.name?.[0] || "U"}</span>
-        <span class="username">{$user?.name || "User"}</span>
-      </div>
-      <button class="btn-secondary" on:click={logout}>Abmelden</button>
-    {/if}
-  </div>
-</header>
-
 <style>
   header {
     background: rgba(15, 12, 41, 0.6); /* Slightly darker glass for header */
