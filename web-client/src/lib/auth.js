@@ -35,7 +35,7 @@ export async function initAuth() {
             msalInstance.setActiveAccount(response.account);
             user.set(response.account);
             isAuthenticated.set(true);
-            accessToken.set(response.accessToken);
+            accessToken.set(response.idToken);
             return;
         }
     } catch (e) {
@@ -84,8 +84,8 @@ export async function acquireToken() {
             ...loginRequest,
             account: account
         });
-        accessToken.set(response.accessToken);
-        return response.accessToken;
+        accessToken.set(response.idToken);
+        return response.idToken;
     } catch (e) {
         console.error(e);
         return null;

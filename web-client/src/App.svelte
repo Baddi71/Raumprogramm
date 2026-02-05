@@ -22,12 +22,12 @@
     await initAuth();
 
     // Subscribe to token changes to connect to DB
-    accessToken.subscribe(async (token) => {
-      if (token) {
+    user.subscribe(async (user) => {
+      if (user) {
         dbReady = false;
         dbError = null;
         try {
-          await connectDB(token);
+          await connectDB(user);
           dbReady = true;
         } catch (e) {
           console.error("DB Connection failed", e);
