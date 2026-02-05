@@ -14,14 +14,7 @@
   let saving = false;
   // Hardcoded configuration for boolean fields
   // Add values here in the format: "categories.categoryName.parameterName"
-  const BOOLEAN_FIELDS = [
-    "categories.ausstattung.klimaanlage",
-    "categories.ausstattung.barrierefrei",
-    "categories.it.wlan",
-    "categories.it.beamer",
-    "categories.sicherheit.zutrittskontrolle",
-    "categories.möbel.Schrank",
-  ];
+  const BOOLEAN_FIELDS = ["categories.moebel.schrank"];
 
   // Populate fieldTypes map for the editors
   // Value "bool" triggers the dropdown logic in CategoryEditor
