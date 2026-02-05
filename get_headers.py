@@ -1,14 +1,12 @@
 
 import csv
+import os
 
-file_path = '/home/baddi/Development/Raumprogramm/Standardräume mit Ausstattung-Grid view.csv'
-
+input_file = 'standardraeume_formular_neu.csv'
+base_dir = os.path.dirname(os.path.abspath(__file__))
+file_path = os.path.join(base_dir, input_file)
 
 with open(file_path, 'r', encoding='utf-8-sig') as f:
-    reader = csv.reader(f)
-    header = next(reader)
-    
-    print(f"Header length: {len(header)}")
-    for i, col in enumerate(header):
-        clean_col = col.replace('\n', ' ').replace('\r', '').strip()
-        print(f"{i}: {clean_col}")
+    reader = csv.DictReader(f, delimiter=';')
+    print("Headers match:", reader.fieldnames)
+    print("Number of headers:", len(reader.fieldnames))
