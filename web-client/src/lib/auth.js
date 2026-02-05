@@ -5,11 +5,9 @@ import { writable } from 'svelte/store';
 // Configuration - User needs to fill these
 export const msalConfig = {
     auth: {
-        clientId: "f4e6ee3d-cd12-4dca-b884-a9b4bdda8b10", // Replace with your ID
-        authority: "https://login.microsoftonline.com/55b4a26c-3686-4d33-b09c-cbc23b7d396c", // Replace with your ID
-        redirectUri: import.meta.env.DEV
-            ? "http://localhost:5173"
-            : "https://raumprogramm.u2projektagentur.de/" // Update this in Azure Portal if needed
+        clientId: import.meta.env.VITE_MSAL_CLIENT_ID,
+        authority: import.meta.env.VITE_MSAL_AUTHORITY,
+        redirectUri: import.meta.env.VITE_MSAL_REDIRECT_URI
     },
     cache: {
         cacheLocation: "sessionStorage",
@@ -56,7 +54,7 @@ export async function initAuth() {
 // Scopes for the application itself
 // Note: You must use the same Client ID as defined in auth.clientId
 const loginRequest = {
-    scopes: ["f4e6ee3d-cd12-4dca-b884-a9b4bdda8b10/.default"]
+    scopes: [`${import.meta.env.VITE_MSAL_CLIENT_ID}/.default`]
 };
 
 export async function login() {
