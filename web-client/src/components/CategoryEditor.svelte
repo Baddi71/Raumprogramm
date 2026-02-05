@@ -1,11 +1,25 @@
 <script>
   import ConfirmDialog from "./ConfirmDialog.svelte";
+  import ValueEditor from "./ValueEditor.svelte";
   import { db } from "../lib/surreal";
 
   export let categoryData = {};
   export let title = "";
   export let currentRoomId = null;
   export let categoryName = "";
+  export let fieldTypes = {};
+
+  function getFieldType(key) {
+    // Construct the full path, e.g., "categories.finance.cost"
+    const fullPath = `categories.${categoryName}.${key}`;
+    const fieldDef = fieldTypes[fullPath];
+
+    if (fieldDef) {
+      // Check if it's explicitly a bool or option<bool>
+      if (fieldDef.includes("bool")) return "bool";
+    }
+    return null;
+  }
 
   let newKey = "";
   let showDeleteConfirm = false;
@@ -23,7 +37,7 @@
     }
 
     // Add to current room
-    categoryData[key] = 0;
+    categoryData[key] = null;
     categoryData = categoryData;
 
     // If "add to all" is checked, add to all other room types
@@ -58,7 +72,7 @@
             }
 
             // Add the property
-            room.categories[categoryName][key] = 0;
+            room.categories[categoryName][key] = null;
 
             // Update the room in the database
             await db.update(room.id, room);
@@ -123,7 +137,10 @@
       <div class="param-card">
         <label for={`param-${key}`}>{key.replace(/_/g, " ")}</label>
         <div class="input-group">
-          <input id={`param-${key}`} bind:value={categoryData[key]} />
+          <ValueEditor
+            bind:value={categoryData[key]}
+            enforceType={getFieldType(key)}
+          />
           <button
             class="delete-btn"
             on:click={() => promptDelete(key)}
@@ -230,24 +247,6 @@
     display: flex;
     gap: 0.5rem;
     align-items: center;
-  }
-
-  .input-group input {
-    flex: 1;
-    padding: 0.5rem 0.75rem;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid var(--glass-border);
-    border-radius: var(--radius-md);
-    color: var(--text-primary);
-    font-family: inherit;
-    transition: all 0.2s ease;
-    min-width: 0; /* Prevents flex item from overflowing */
-  }
-
-  .input-group input:focus {
-    outline: none;
-    border-color: var(--primary);
-    background: rgba(255, 255, 255, 0.1);
   }
 
   .delete-btn {
