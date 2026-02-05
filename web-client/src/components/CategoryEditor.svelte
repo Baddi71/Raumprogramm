@@ -130,7 +130,7 @@
 </script>
 
 <div class="category-box glass-panel">
-  <h4 class="category-title">{title}</h4>
+  <h4 class="category-title">{title === "moebel" ? "Möbel" : title}</h4>
 
   <div class="params-grid">
     {#each Object.entries(categoryData) as [key, val]}
