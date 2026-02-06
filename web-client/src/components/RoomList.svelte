@@ -99,12 +99,18 @@
       if (searchQuery) {
         const query = searchQuery.toLowerCase();
         const matchesSearch =
-          (room.nc_code_7_stellig || "").toLowerCase().includes(query) ||
-          (room.nc_bezeichnung || "").toLowerCase().includes(query) ||
-          (room.raumtyp || "").toLowerCase().includes(query) ||
+          String(room.nc_code_7_stellig || "")
+            .toLowerCase()
+            .includes(query) ||
+          String(room.nc_bezeichnung || "")
+            .toLowerCase()
+            .includes(query) ||
+          String(room.raumtyp || "")
+            .toLowerCase()
+            .includes(query) ||
           (Array.isArray(room.teilprojekt)
-            ? room.teilprojekt[0] || ""
-            : room.teilprojekt || ""
+            ? String(room.teilprojekt[0] || "")
+            : String(room.teilprojekt || "")
           )
             .toLowerCase()
             .includes(query);
