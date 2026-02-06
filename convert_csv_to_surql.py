@@ -225,16 +225,18 @@ with open(file_path, 'r', encoding='utf-8-sig') as f:
 
             cat = get_category(orig_header)
             
-            if is_root or cat == 'root':
-                data[key] = parsed_val
-            elif cat == 'general':
-                if 'general' not in data["categories"]:
-                     data["categories"]['general'] = {}
-                data["categories"]['general'][key] = parsed_val
-            else:
-                if cat not in data["categories"]:
-                    data["categories"][cat] = {}
-                data["categories"][cat][key] = parsed_val
+            # Skip adding field if value is None
+            if parsed_val is not None:
+                if is_root or cat == 'root':
+                    data[key] = parsed_val
+                elif cat == 'general':
+                    if 'general' not in data["categories"]:
+                         data["categories"]['general'] = {}
+                    data["categories"]['general'][key] = parsed_val
+                else:
+                    if cat not in data["categories"]:
+                        data["categories"][cat] = {}
+                    data["categories"][cat][key] = parsed_val
         
         if "info" not in data:
              data["info"] = {}

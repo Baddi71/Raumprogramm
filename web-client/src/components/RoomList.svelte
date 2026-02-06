@@ -1,17 +1,34 @@
-<script>
+<script lang="ts">
   import { onMount, createEventDispatcher } from "svelte";
   import { db } from "../lib/surreal";
 
   const dispatch = createEventDispatcher();
-  let rooms = [];
+  let rooms: any[] = [];
   let loading = true;
+  let debugInfo: any = null;
 
   onMount(async () => {
     try {
-      const result = await db.select("raumtypen");
-      rooms = result;
-    } catch (e) {
+      const result = await db.query(
+        "SELECT *, ->hat_teilprojekt->teilprojekt.name AS teilprojekt FROM raumtypen ORDER BY nc_code_7_stellig ASC",
+      );
+      debugInfo = result[0];
+      // Robust check
+      // Direct assignment with fallback
+      const r = Array.isArray(result) ? result[0] : result;
+
+      if (Array.isArray(r)) {
+        rooms = r;
+      } else if (r && r.result) {
+        rooms = r.result;
+      } else {
+        rooms = [];
+      }
+
+      console.log("Rooms assigned:", r);
+    } catch (e: any) {
       console.error(e);
+      debugInfo = { error: e.message };
       alert("Fehler beim Laden der Daten: " + e.message);
     } finally {
       loading = false;
@@ -56,7 +73,13 @@
       return (
         (room.nc_code_7_stellig || "").toLowerCase().includes(query) ||
         (room.nc_bezeichnung || "").toLowerCase().includes(query) ||
-        (room.raumtyp || "").toLowerCase().includes(query)
+        (room.raumtyp || "").toLowerCase().includes(query) ||
+        (Array.isArray(room.teilprojekt)
+          ? room.teilprojekt[0] || ""
+          : room.teilprojekt || ""
+        )
+          .toLowerCase()
+          .includes(query)
       );
     })
     .sort((a, b) => {
@@ -143,6 +166,14 @@
                 >
               {/if}
             </th>
+            <th class="sortable" on:click={() => handleSort("teilprojekt")}>
+              Teilprojekt
+              {#if sortField === "teilprojekt"}
+                <span class="sort-icon"
+                  >{sortDirection === "asc" ? "↑" : "↓"}</span
+                >
+              {/if}
+            </th>
             <th class="sortable" on:click={() => handleSort("raumtyp")}>
               Raumtyp
               {#if sortField === "raumtyp"}
@@ -171,6 +202,12 @@
               <td class="name" data-label="Bezeichnung"
                 >{room.nc_bezeichnung}</td
               >
+              <td data-label="Teilprojekt"
+                >{Array.isArray(room.teilprojekt)
+                  ? room.teilprojekt[0] || "-"
+                  : room.teilprojekt || "-"}</td
+              >
+
               <td data-label="Raumtyp">{room.raumtyp}</td>
               <td data-label="Status">
                 <span

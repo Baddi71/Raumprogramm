@@ -41,14 +41,26 @@
 
     (async () => {
       try {
-        const result = await db.select(id);
-        room = Array.isArray(result) ? result[0] : result;
+        const result = await db.query(
+          `SELECT *, 
+          ->hat_teilprojekt->teilprojekt.name AS teilprojekt, 
+          ->hat_nutzer_ebene_1->nutzer_ebene_1.name AS nutzer_ebene_1, 
+          ->hat_nutzer_ebene_2->nutzer_ebene_2.name AS nutzer_ebene_2, 
+          ->hat_funktions_bereich->funktions_bereich.name AS funktions_bereich 
+          FROM $id`,
+          { id },
+        );
+        const r = Array.isArray(result) ? result[0] : result;
+        const records = Array.isArray(r) ? r : r && r.result ? r.result : [];
+        room = records[0] || null;
 
-        if (!room.categories) room.categories = {};
-        if (!room.description) room.description = "";
+        if (room) {
+          if (!room.categories) room.categories = {};
+          if (!room.description) room.description = "";
 
-        // Store initial state as string for easy comparison
-        originalRoom = JSON.stringify(room);
+          // Store initial state as string for easy comparison
+          originalRoom = JSON.stringify(room);
+        }
       } catch (e) {
         console.error(e);
         alert("Fehler: " + e.message);
@@ -65,7 +77,13 @@
   async function save() {
     saving = true;
     try {
-      await db.update(id, room);
+      const roomToSave = { ...room };
+      delete roomToSave.teilprojekt;
+      delete roomToSave.nutzer_ebene_1;
+      delete roomToSave.nutzer_ebene_2;
+      delete roomToSave.funktions_bereich;
+
+      await db.update(id, roomToSave);
       // Update original state after successful save
       originalRoom = JSON.stringify(room);
       alert("Erfolgreich gespeichert!");
@@ -132,7 +150,43 @@
         <div class="input-field">
           <label for="status-select">Status</label>
           <!-- Using a wrapper div to avoid A11y label issues since custom component handles its own ID internally or via prop -->
-          <StatusSelect bind:value={room.categories.info.status} />
+          <StatusSelect bind:value={room.info.status} />
+        </div>
+        <div class="input-field">
+          <label for="teilprojekt">Teilprojekt</label>
+          <input
+            id="teilprojekt"
+            value={room.teilprojekt?.[0] || ""}
+            readonly
+            disabled
+          />
+        </div>
+        <div class="input-field">
+          <label for="nutzer1">Nutzer Ebene 1</label>
+          <input
+            id="nutzer1"
+            value={room.nutzer_ebene_1?.[0] || ""}
+            readonly
+            disabled
+          />
+        </div>
+        <div class="input-field">
+          <label for="nutzer2">Nutzer Ebene 2</label>
+          <input
+            id="nutzer2"
+            value={room.nutzer_ebene_2?.[0] || ""}
+            readonly
+            disabled
+          />
+        </div>
+        <div class="input-field">
+          <label for="funktionsbereich">Funktionsbereich</label>
+          <input
+            id="funktionsbereich"
+            value={room.funktions_bereich?.[0] || ""}
+            readonly
+            disabled
+          />
         </div>
       </div>
     </div>
