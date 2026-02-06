@@ -320,7 +320,7 @@
       <table>
         <thead>
           <tr>
-            {#if visibleColumnIds.has("nc_code_7_stellig")}
+            {#if true}
               <th
                 class="sortable"
                 on:click={() => handleSort("nc_code_7_stellig")}
@@ -333,7 +333,7 @@
                 {/if}
               </th>
             {/if}
-            {#if visibleColumnIds.has("nc_bezeichnung")}
+            {#if true}
               <th
                 class="sortable"
                 on:click={() => handleSort("nc_bezeichnung")}
@@ -405,12 +405,12 @@
         <tbody>
           {#each filteredRooms as room (room.id)}
             <tr>
-              {#if visibleColumnIds.has("nc_code_7_stellig")}
+              {#if true}
                 <td class="code" data-label="NC Code"
                   >{room.nc_code_7_stellig || room.id}</td
                 >
               {/if}
-              {#if visibleColumnIds.has("nc_bezeichnung")}
+              {#if true}
                 <td class="name" data-label="Bezeichnung"
                   >{room.nc_bezeichnung}</td
                 >
@@ -442,9 +442,7 @@
               {#if visibleColumnIds.has("status")}
                 <td data-label="Status">
                   <span
-                    class="status-badge {getStatusClass(
-                      room.categories?.info?.status,
-                    )}"
+                    class="status-badge {getStatusClass(room.info?.status)}"
                   >
                     {getStatusLabel(room.categories?.info?.status)}
                   </span>
