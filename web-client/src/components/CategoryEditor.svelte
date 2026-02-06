@@ -165,7 +165,7 @@
     </button>
   </div> -->
 
-  {#if currentRoomId && categoryName}
+  <!-- {#if currentRoomId && categoryName}
     <div class="bulk-option">
       <label class="checkbox-label">
         <input
@@ -182,7 +182,7 @@
         </div>
       {/if}
     </div>
-  {/if}
+  {/if} -->
 </div>
 
 <ConfirmDialog
