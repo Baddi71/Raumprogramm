@@ -10,7 +10,7 @@
   onMount(async () => {
     try {
       const result = await db.query(
-        "SELECT *, ->hat_teilprojekt->teilprojekt.name AS teilprojekt FROM raumtypen ORDER BY nc_code_7_stellig ASC",
+        "SELECT *, ->hat_teilprojekt->teilprojekt.name AS teilprojekt, ->hat_nutzer_ebene_1->nutzer_ebene_1.name AS nutzer FROM raumtypen ORDER BY nc_code_7_stellig ASC",
       );
       debugInfo = result[0];
       // Robust check
@@ -19,8 +19,8 @@
 
       if (Array.isArray(r)) {
         rooms = r;
-      } else if (r && r.result) {
-        rooms = r.result;
+      } else if (r && (r as any).result) {
+        rooms = (r as any).result;
       } else {
         rooms = [];
       }
@@ -63,24 +63,75 @@
 
   // Filtering and Sorting
   let searchQuery = "";
+  let filterTeilprojekt = "";
+  let filterRaumtyp = "";
+  let filterNutzer = "";
+
   let sortField = "nc_code_7_stellig";
   let sortDirection = "asc";
 
+  // Compute unique values for filters
+  $: uniqueTeilprojekte = [
+    ...new Set(
+      rooms
+        .flatMap((r) => r.teilprojekt)
+        .filter(Boolean)
+        .map((t) => String(t)),
+    ),
+  ].sort();
+
+  $: uniqueRaumtypen = [
+    ...new Set(rooms.map((r) => r.raumtyp).filter(Boolean)),
+  ].sort();
+
+  $: uniqueNutzer = [
+    ...new Set(
+      rooms
+        .flatMap((r) => r.nutzer)
+        .filter(Boolean)
+        .map((n) => String(n)),
+    ),
+  ].sort();
+
   $: filteredRooms = rooms
     .filter((room) => {
-      if (!searchQuery) return true;
-      const query = searchQuery.toLowerCase();
-      return (
-        (room.nc_code_7_stellig || "").toLowerCase().includes(query) ||
-        (room.nc_bezeichnung || "").toLowerCase().includes(query) ||
-        (room.raumtyp || "").toLowerCase().includes(query) ||
-        (Array.isArray(room.teilprojekt)
-          ? room.teilprojekt[0] || ""
-          : room.teilprojekt || ""
-        )
-          .toLowerCase()
-          .includes(query)
-      );
+      // Search Query
+      if (searchQuery) {
+        const query = searchQuery.toLowerCase();
+        const matchesSearch =
+          (room.nc_code_7_stellig || "").toLowerCase().includes(query) ||
+          (room.nc_bezeichnung || "").toLowerCase().includes(query) ||
+          (room.raumtyp || "").toLowerCase().includes(query) ||
+          (Array.isArray(room.teilprojekt)
+            ? room.teilprojekt[0] || ""
+            : room.teilprojekt || ""
+          )
+            .toLowerCase()
+            .includes(query);
+
+        if (!matchesSearch) return false;
+      }
+
+      // Filter Teilprojekt
+      if (filterTeilprojekt) {
+        const tp = Array.isArray(room.teilprojekt)
+          ? room.teilprojekt
+          : [room.teilprojekt];
+        if (!tp.includes(filterTeilprojekt)) return false;
+      }
+
+      // Filter Raumtyp
+      if (filterRaumtyp) {
+        if (room.raumtyp !== filterRaumtyp) return false;
+      }
+
+      // Filter Nutzer
+      if (filterNutzer) {
+        const user = Array.isArray(room.nutzer) ? room.nutzer : [room.nutzer];
+        if (!user.includes(filterNutzer)) return false;
+      }
+
+      return true;
     })
     .sort((a, b) => {
       let fieldA = a[sortField];
@@ -123,6 +174,30 @@
         <p class="subtitle">{filteredRooms.length} Räume gefunden</p>
       </div>
       <div class="search-sort-controls">
+        <!-- Filters -->
+        <div class="filters">
+          <select bind:value={filterTeilprojekt} class="filter-select">
+            <option value="">Alle Teilprojekte</option>
+            {#each uniqueTeilprojekte as tp}
+              <option value={tp}>{tp}</option>
+            {/each}
+          </select>
+
+          <select bind:value={filterRaumtyp} class="filter-select">
+            <option value="">Alle Raumtypen</option>
+            {#each uniqueRaumtypen as rt}
+              <option value={rt}>{rt}</option>
+            {/each}
+          </select>
+
+          <select bind:value={filterNutzer} class="filter-select">
+            <option value="">Alle Nutzer</option>
+            {#each uniqueNutzer as user}
+              <option value={user}>{user}</option>
+            {/each}
+          </select>
+        </div>
+
         <div class="search-box">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -459,6 +534,41 @@
     background: rgba(255, 255, 255, 0.1);
     color: var(--primary);
     transform: translateY(-1px);
+  }
+
+  .search-sort-controls {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .filters {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+
+  .filter-select {
+    padding: 0.5rem 2rem 0.5rem 1rem;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--glass-border);
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--text-primary);
+    outline: none;
+    cursor: pointer;
+    font-size: 0.9rem;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2394a3b8'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.5rem center;
+    background-size: 1.25em;
+    min-width: 150px;
+  }
+
+  .filter-select:focus {
+    border-color: var(--primary);
+    background-color: rgba(255, 255, 255, 0.1);
   }
 
   @media (max-width: 768px) {
