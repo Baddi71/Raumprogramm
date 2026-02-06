@@ -128,71 +128,76 @@
       <p class="code">Code: {room.nc_code_7_stellig}</p>
     </div>
 
-    <div class="section office-panel" style="position: relative; z-index: 10;">
-      <h3>Stammdaten</h3>
-      <div class="input-grid">
-        <div class="input-field">
-          <label for="room-name">Raumbezeichnung</label>
-          <input id="room-name" bind:value={room.raum_bezeichnung} />
-        </div>
-        <div class="input-field">
-          <label for="room-type">Raumtyp</label>
-          <input id="room-type" bind:value={room.raumtyp} />
-        </div>
-        <div class="input-field">
-          <label for="room-count">Anzahl Räume</label>
-          <input
-            id="room-count"
-            type="number"
-            bind:value={room.anzahl_räume_summe}
-          />
-        </div>
-        <div class="input-field">
-          <label for="status-select">Status</label>
-          <!-- Using a wrapper div to avoid A11y label issues since custom component handles its own ID internally or via prop -->
-          <StatusSelect bind:value={room.info.status} />
-        </div>
-        <div class="input-field">
-          <label for="teilprojekt">Teilprojekt</label>
-          <input
-            id="teilprojekt"
-            value={room.teilprojekt?.[0] || ""}
-            readonly
-            disabled
-          />
-        </div>
-        <div class="input-field">
-          <label for="nutzer1">Nutzer Ebene 1</label>
-          <input
-            id="nutzer1"
-            value={room.nutzer_ebene_1?.[0] || ""}
-            readonly
-            disabled
-          />
-        </div>
-        <div class="input-field">
-          <label for="nutzer2">Nutzer Ebene 2</label>
-          <input
-            id="nutzer2"
-            value={room.nutzer_ebene_2?.[0] || ""}
-            readonly
-            disabled
-          />
-        </div>
-        <div class="input-field">
-          <label for="funktionsbereich">Funktionsbereich</label>
-          <input
-            id="funktionsbereich"
-            value={room.funktions_bereich?.[0] || ""}
-            readonly
-            disabled
-          />
+    <div class="split-layout">
+      <div
+        class="section office-panel"
+        style="position: relative; z-index: 10;"
+      >
+        <h3>Stammdaten</h3>
+        <div class="input-grid">
+          <div class="input-field">
+            <label for="room-name">Raumbezeichnung</label>
+            <input id="room-name" bind:value={room.raum_bezeichnung} />
+          </div>
+          <div class="input-field">
+            <label for="room-type">Raumtyp</label>
+            <input id="room-type" bind:value={room.raumtyp} />
+          </div>
+          <div class="input-field">
+            <label for="room-count">Anzahl Räume</label>
+            <input
+              id="room-count"
+              type="number"
+              bind:value={room.anzahl_räume_summe}
+            />
+          </div>
+          <div class="input-field">
+            <label for="status-select">Status</label>
+            <!-- Using a wrapper div to avoid A11y label issues since custom component handles its own ID internally or via prop -->
+            <StatusSelect bind:value={room.info.status} />
+          </div>
+          <div class="input-field">
+            <label for="teilprojekt">Teilprojekt</label>
+            <input
+              id="teilprojekt"
+              value={room.teilprojekt?.[0] || ""}
+              readonly
+              disabled
+            />
+          </div>
+          <div class="input-field">
+            <label for="nutzer1">Nutzer Ebene 1</label>
+            <input
+              id="nutzer1"
+              value={room.nutzer_ebene_1?.[0] || ""}
+              readonly
+              disabled
+            />
+          </div>
+          <div class="input-field">
+            <label for="nutzer2">Nutzer Ebene 2</label>
+            <input
+              id="nutzer2"
+              value={room.nutzer_ebene_2?.[0] || ""}
+              readonly
+              disabled
+            />
+          </div>
+          <div class="input-field">
+            <label for="funktionsbereich">Funktionsbereich</label>
+            <input
+              id="funktionsbereich"
+              value={room.funktions_bereich?.[0] || ""}
+              readonly
+              disabled
+            />
+          </div>
         </div>
       </div>
-    </div>
-    <div class="section office-panel">
-      <h3>Beschreibung</h3>
-      <MarkdownEditor bind:value={room.description} />
+      <div class="section office-panel">
+        <h3>Beschreibung</h3>
+        <MarkdownEditor bind:value={room.description} />
+      </div>
     </div>
 
     <div class="categories-section">
@@ -263,6 +268,13 @@
     /* Remove shadow for flatter look or keep minimal */
   }
 
+  .split-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    align-items: start; /* Ensure panels don't stretch weirdly if one is short */
+  }
+
   .room-header {
     padding: 0.75rem 1rem;
     /* border-bottom removed as it's handled by office-panel border */
@@ -302,9 +314,9 @@
 
   .input-grid {
     display: grid;
-    /* Maintain density but ensure labels have space */
-    grid-template-columns: repeat(auto-fill, minmax(450px, 1fr));
-    gap: 0.5rem 1.5rem;
+    /* In split layout, we want just one column of inputs */
+    grid-template-columns: 1fr;
+    gap: 0.5rem 0; /* No horizontal gap needed */
   }
 
   .input-field {
@@ -374,6 +386,12 @@
   .error-container {
     padding: 2rem;
     text-align: center;
+  }
+
+  @media (max-width: 1200px) {
+    .split-layout {
+      grid-template-columns: 1fr;
+    }
   }
 
   @media (max-width: 1024px) {
