@@ -10,7 +10,7 @@
   onMount(async () => {
     try {
       const result = await db.query(
-        "SELECT *, ->hat_teilprojekt->teilprojekt.name AS teilprojekt, ->hat_nutzer_ebene_1->nutzer_ebene_1.name AS nutzer FROM raumtypen ORDER BY nc_code_7_stellig ASC",
+        "SELECT *, ->hat_teilprojekt->teilprojekt.name AS teilprojekt, ->hat_nutzer_ebene_1->nutzer_ebene_1.name AS nutzer, ->hat_funktions_bereich->funktions_bereich.name AS funktionsbereich FROM raumtypen ORDER BY nc_code_7_stellig ASC",
       );
       debugInfo = result[0];
       // Robust check
@@ -69,6 +69,38 @@
 
   let sortField = "nc_code_7_stellig";
   let sortDirection = "asc";
+
+  // Column functions
+  let showColumnDropdown = false;
+  let columns = [
+    // {
+    //   id: "nc_code_7_stellig",
+    //   label: "NC Code",
+    //   visible: true,
+    //   mandatory: true,
+    // },
+    // {
+    //   id: "nc_bezeichnung",
+    //   label: "Bezeichnung",
+    //   visible: true,
+    //   mandatory: true,
+    // },
+    { id: "teilprojekt", label: "Teilprojekt", visible: true },
+    { id: "nutzer", label: "Nutzer", visible: true },
+    { id: "funktionsbereich", label: "Funktionsbereich", visible: true },
+    { id: "raumtyp", label: "Raumtyp", visible: true },
+    { id: "status", label: "Status", visible: true },
+  ];
+
+  $: visibleColumnIds = new Set(
+    columns.filter((c) => c.visible).map((c) => c.id),
+  );
+
+  function toggleColumn(id) {
+    columns = columns.map((c) =>
+      c.id === id ? { ...c, visible: !c.visible } : c,
+    );
+  }
 
   // Compute unique values for filters
   $: uniqueTeilprojekte = [
@@ -143,8 +175,17 @@
       let fieldA = a[sortField];
       let fieldB = b[sortField];
 
+      // Handle array fields
+      if (["teilprojekt", "nutzer", "funktionsbereich"].includes(sortField)) {
+        fieldA = Array.isArray(a[sortField])
+          ? a[sortField][0] || ""
+          : a[sortField] || "";
+        fieldB = Array.isArray(b[sortField])
+          ? b[sortField][0] || ""
+          : b[sortField] || "";
+      }
       // Handle nested properties if needed, e.g. status
-      if (sortField === "status") {
+      else if (sortField === "status") {
         fieldA = a.categories?.info?.status || "";
         fieldB = b.categories?.info?.status || "";
       }
@@ -152,8 +193,10 @@
       if (!fieldA) fieldA = "";
       if (!fieldB) fieldB = "";
 
-      if (fieldA < fieldB) return sortDirection === "asc" ? -1 : 1;
-      if (fieldA > fieldB) return sortDirection === "asc" ? 1 : -1;
+      if (String(fieldA).toLowerCase() < String(fieldB).toLowerCase())
+        return sortDirection === "asc" ? -1 : 1;
+      if (String(fieldA).toLowerCase() > String(fieldB).toLowerCase())
+        return sortDirection === "asc" ? 1 : -1;
       return 0;
     });
 
@@ -202,6 +245,55 @@
               <option value={user}>{user}</option>
             {/each}
           </select>
+
+          <!-- Column Toggle -->
+          <div class="column-toggle" style="position: relative;">
+            <button
+              class="btn-icon"
+              on:click={() => (showColumnDropdown = !showColumnDropdown)}
+              title="Spalten anpassen"
+              style="height: 100%; border: 1px solid var(--glass-border); border-radius: var(--radius-md); padding: 0 1rem;"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path
+                  d="M9 3H5a2 2 0 0 0-2 2v4a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2z"
+                ></path>
+                <path
+                  d="M19 3h-4a2 2 0 0 0-2 2v4a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2z"
+                ></path>
+                <path
+                  d="M9 13H5a2 2 0 0 0-2 2v4a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2v-4a2 2 0 0 0-2-2z"
+                ></path>
+                <path
+                  d="M19 13h-4a2 2 0 0 0-2 2v4a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2v-4a2 2 0 0 0-2-2z"
+                ></path>
+              </svg>
+            </button>
+            {#if showColumnDropdown}
+              <div class="dropdown-menu">
+                {#each columns as col}
+                  <label class="dropdown-item">
+                    <input
+                      type="checkbox"
+                      checked={col.visible}
+                      on:change={() => toggleColumn(col.id)}
+                    />
+                    {col.label}
+                  </label>
+                {/each}
+              </div>
+            {/if}
+          </div>
         </div>
 
         <div class="search-box">
@@ -228,77 +320,136 @@
       <table>
         <thead>
           <tr>
-            <th
-              class="sortable"
-              on:click={() => handleSort("nc_code_7_stellig")}
-            >
-              NC Code
-              {#if sortField === "nc_code_7_stellig"}
-                <span class="sort-icon"
-                  >{sortDirection === "asc" ? "↑" : "↓"}</span
-                >
-              {/if}
-            </th>
-            <th class="sortable" on:click={() => handleSort("nc_bezeichnung")}>
-              Bezeichnung
-              {#if sortField === "nc_bezeichnung"}
-                <span class="sort-icon"
-                  >{sortDirection === "asc" ? "↑" : "↓"}</span
-                >
-              {/if}
-            </th>
-            <th class="sortable" on:click={() => handleSort("teilprojekt")}>
-              Teilprojekt
-              {#if sortField === "teilprojekt"}
-                <span class="sort-icon"
-                  >{sortDirection === "asc" ? "↑" : "↓"}</span
-                >
-              {/if}
-            </th>
-            <th class="sortable" on:click={() => handleSort("raumtyp")}>
-              Raumtyp
-              {#if sortField === "raumtyp"}
-                <span class="sort-icon"
-                  >{sortDirection === "asc" ? "↑" : "↓"}</span
-                >
-              {/if}
-            </th>
-            <th class="sortable" on:click={() => handleSort("status")}>
-              Status
-              {#if sortField === "status"}
-                <span class="sort-icon"
-                  >{sortDirection === "asc" ? "↑" : "↓"}</span
-                >
-              {/if}
-            </th>
+            {#if visibleColumnIds.has("nc_code_7_stellig")}
+              <th
+                class="sortable"
+                on:click={() => handleSort("nc_code_7_stellig")}
+              >
+                NC Code
+                {#if sortField === "nc_code_7_stellig"}
+                  <span class="sort-icon"
+                    >{sortDirection === "asc" ? "↑" : "↓"}</span
+                  >
+                {/if}
+              </th>
+            {/if}
+            {#if visibleColumnIds.has("nc_bezeichnung")}
+              <th
+                class="sortable"
+                on:click={() => handleSort("nc_bezeichnung")}
+              >
+                Bezeichnung
+                {#if sortField === "nc_bezeichnung"}
+                  <span class="sort-icon"
+                    >{sortDirection === "asc" ? "↑" : "↓"}</span
+                  >
+                {/if}
+              </th>
+            {/if}
+            {#if visibleColumnIds.has("teilprojekt")}
+              <th class="sortable" on:click={() => handleSort("teilprojekt")}>
+                Teilprojekt
+                {#if sortField === "teilprojekt"}
+                  <span class="sort-icon"
+                    >{sortDirection === "asc" ? "↑" : "↓"}</span
+                  >
+                {/if}
+              </th>
+            {/if}
+            {#if visibleColumnIds.has("nutzer")}
+              <th class="sortable" on:click={() => handleSort("nutzer")}>
+                Nutzer
+                {#if sortField === "nutzer"}
+                  <span class="sort-icon"
+                    >{sortDirection === "asc" ? "↑" : "↓"}</span
+                  >
+                {/if}
+              </th>
+            {/if}
+            {#if visibleColumnIds.has("funktionsbereich")}
+              <th
+                class="sortable"
+                on:click={() => handleSort("funktionsbereich")}
+              >
+                Funktionsbereich
+                {#if sortField === "funktionsbereich"}
+                  <span class="sort-icon"
+                    >{sortDirection === "asc" ? "↑" : "↓"}</span
+                  >
+                {/if}
+              </th>
+            {/if}
+            {#if visibleColumnIds.has("raumtyp")}
+              <th class="sortable" on:click={() => handleSort("raumtyp")}>
+                Raumtyp
+                {#if sortField === "raumtyp"}
+                  <span class="sort-icon"
+                    >{sortDirection === "asc" ? "↑" : "↓"}</span
+                  >
+                {/if}
+              </th>
+            {/if}
+            {#if visibleColumnIds.has("status")}
+              <th class="sortable" on:click={() => handleSort("status")}>
+                Status
+                {#if sortField === "status"}
+                  <span class="sort-icon"
+                    >{sortDirection === "asc" ? "↑" : "↓"}</span
+                  >
+                {/if}
+              </th>
+            {/if}
             <th>Aktion</th>
           </tr>
         </thead>
         <tbody>
           {#each filteredRooms as room (room.id)}
             <tr>
-              <td class="code" data-label="NC Code"
-                >{room.nc_code_7_stellig || room.id}</td
-              >
-              <td class="name" data-label="Bezeichnung"
-                >{room.nc_bezeichnung}</td
-              >
-              <td data-label="Teilprojekt"
-                >{Array.isArray(room.teilprojekt)
-                  ? room.teilprojekt[0] || "-"
-                  : room.teilprojekt || "-"}</td
-              >
-
-              <td data-label="Raumtyp">{room.raumtyp}</td>
-              <td data-label="Status">
-                <span
-                  class="status-badge {getStatusClass(
-                    room.categories?.info?.status,
-                  )}"
+              {#if visibleColumnIds.has("nc_code_7_stellig")}
+                <td class="code" data-label="NC Code"
+                  >{room.nc_code_7_stellig || room.id}</td
                 >
-                  {getStatusLabel(room.categories?.info?.status)}
-                </span>
-              </td>
+              {/if}
+              {#if visibleColumnIds.has("nc_bezeichnung")}
+                <td class="name" data-label="Bezeichnung"
+                  >{room.nc_bezeichnung}</td
+                >
+              {/if}
+              {#if visibleColumnIds.has("teilprojekt")}
+                <td data-label="Teilprojekt"
+                  >{Array.isArray(room.teilprojekt)
+                    ? room.teilprojekt[0] || "-"
+                    : room.teilprojekt || "-"}</td
+                >
+              {/if}
+              {#if visibleColumnIds.has("nutzer")}
+                <td data-label="Nutzer"
+                  >{Array.isArray(room.nutzer)
+                    ? room.nutzer[0] || "-"
+                    : room.nutzer || "-"}</td
+                >
+              {/if}
+              {#if visibleColumnIds.has("funktionsbereich")}
+                <td data-label="Funktionsbereich"
+                  >{Array.isArray(room.funktionsbereich)
+                    ? room.funktionsbereich[0] || "-"
+                    : room.funktionsbereich || "-"}</td
+                >
+              {/if}
+              {#if visibleColumnIds.has("raumtyp")}
+                <td data-label="Raumtyp">{room.raumtyp}</td>
+              {/if}
+              {#if visibleColumnIds.has("status")}
+                <td data-label="Status">
+                  <span
+                    class="status-badge {getStatusClass(
+                      room.categories?.info?.status,
+                    )}"
+                  >
+                    {getStatusLabel(room.categories?.info?.status)}
+                  </span>
+                </td>
+              {/if}
               <td data-label="Aktion">
                 <button
                   class="btn-icon"
@@ -424,7 +575,7 @@
   }
 
   .table-wrapper {
-    overflow: hidden;
+    overflow-x: auto;
     padding: 0;
   }
 
@@ -575,6 +726,41 @@
   .filter-select:focus {
     border-color: var(--primary);
     background-color: rgba(255, 255, 255, 0.1);
+  }
+
+  .dropdown-menu {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    margin-top: 0.5rem;
+    background: #1e293b;
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-md);
+    padding: 0.5rem;
+    box-shadow:
+      0 4px 6px -1px rgba(0, 0, 0, 0.1),
+      0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    z-index: 50;
+    min-width: 200px;
+  }
+
+  .dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem;
+    color: var(--text-primary);
+    cursor: pointer;
+    border-radius: var(--radius-sm);
+    user-select: none;
+  }
+
+  .dropdown-item:hover {
+    background: rgba(255, 255, 255, 0.1);
+  }
+
+  .dropdown-item input {
+    cursor: pointer;
   }
 
   @media (max-width: 768px) {
