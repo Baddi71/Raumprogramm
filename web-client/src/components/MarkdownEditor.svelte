@@ -106,16 +106,23 @@
         display: flex;
         flex-direction: column;
         overflow: hidden;
-        background: rgba(255, 255, 255, 0.03);
+        background: rgba(
+            255,
+            255,
+            255,
+            0.25
+        ); /* Intermediate contrast for large area */
+        border-radius: 2px;
+        border: 1px solid var(--glass-border);
     }
 
     .toolbar {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        padding: 0.5rem 1rem;
+        padding: 0.25rem 0.5rem; /* Compact padding */
         border-bottom: 1px solid var(--glass-border);
-        background: rgba(255, 255, 255, 0.02);
+        background: rgba(255, 255, 255, 0.1);
     }
 
     .mode-switch {

@@ -123,12 +123,12 @@
       </button>
     </div>
 
-    <div class="room-header glass-panel">
+    <div class="room-header office-panel">
       <h1>{room.nc_bezeichnung}</h1>
       <p class="code">Code: {room.nc_code_7_stellig}</p>
     </div>
 
-    <div class="section glass-panel" style="position: relative; z-index: 10;">
+    <div class="section office-panel" style="position: relative; z-index: 10;">
       <h3>Stammdaten</h3>
       <div class="input-grid">
         <div class="input-field">
@@ -190,7 +190,7 @@
         </div>
       </div>
     </div>
-    <div class="section glass-panel">
+    <div class="section office-panel">
       <h3>Beschreibung</h3>
       <MarkdownEditor bind:value={room.description} />
     </div>
@@ -255,13 +255,22 @@
     align-items: center;
   }
 
+  /* New Office Panel Style to replace glass-panel */
+  .office-panel {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid var(--glass-border);
+    border-radius: 4px;
+    /* Remove shadow for flatter look or keep minimal */
+  }
+
   .room-header {
-    padding: 2rem;
+    padding: 0.75rem 1rem;
+    /* border-bottom removed as it's handled by office-panel border */
   }
 
   .room-header h1 {
     margin: 0;
-    font-size: 2rem;
+    font-size: 1.5rem;
     font-weight: 700;
     background: linear-gradient(to right, var(--primary), var(--secondary));
     -webkit-background-clip: text;
@@ -270,58 +279,76 @@
   }
 
   .code {
-    margin: 0.5rem 0 0 0;
+    margin: 0.1rem 0 0 0;
     color: var(--text-muted);
     font-family: "Courier New", monospace;
+    font-size: 0.85rem;
   }
 
   .section {
-    padding: 2rem;
+    padding: 1rem;
+    /* border-bottom removed */
   }
 
   h3 {
-    margin: 0 0 1.5rem 0;
-    font-size: 1.25rem;
+    margin: 0 0 0.75rem 0;
+    font-size: 1rem;
     font-weight: 600;
     color: var(--text-primary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    opacity: 0.8;
   }
 
   .input-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 1.25rem;
+    /* Maintain density but ensure labels have space */
+    grid-template-columns: repeat(auto-fill, minmax(450px, 1fr));
+    gap: 0.5rem 1.5rem;
   }
 
   .input-field {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
+    display: grid;
+    grid-template-columns: 250px 1fr;
+    align-items: center;
+    gap: 0.75rem;
   }
 
   .input-field label {
-    font-size: 0.875rem;
+    font-size: 0.75rem;
     font-weight: 500;
     color: var(--text-secondary);
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
+    text-transform: none;
+    letter-spacing: normal;
     transition: color 0.2s ease;
+    text-align: right;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .input-field input {
-    padding: 0.75rem 1rem;
-    background: rgba(255, 255, 255, 0.05);
+    padding: 0.25rem 0.5rem;
+    background: rgba(
+      255,
+      255,
+      255,
+      0.4
+    ); /* Increased opacity for better contrast */
     border: 1px solid var(--glass-border);
-    border-radius: var(--radius-md);
+    border-radius: 2px; /* sharper corners for office look */
     color: var(--text-primary);
     font-family: inherit;
     transition: all 0.2s ease;
+    font-size: 0.85rem;
+    height: 28px; /* Ultra compact */
   }
 
   .input-field input:focus {
     outline: none;
     border-color: var(--primary);
-    background: rgba(255, 255, 255, 0.1);
-    box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.2);
+    background: rgba(255, 255, 255, 0.6);
+    box-shadow: 0 0 0 1px rgba(168, 85, 247, 0.3);
   }
 
   .input-field:focus-within label {
@@ -333,17 +360,38 @@
   }
 
   .categories-section h3 {
-    margin-bottom: 1rem;
+    margin-bottom: 0.5rem;
+    padding-left: 1rem;
   }
 
   .categories-grid {
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Two columns */
+    gap: 1rem;
+    padding: 0 1rem 1rem 1rem;
   }
 
   .error-container {
     padding: 2rem;
     text-align: center;
+  }
+
+  @media (max-width: 1024px) {
+    .categories-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .input-grid {
+      grid-template-columns: 1fr;
+    }
+    .input-field {
+      grid-template-columns: 1fr;
+      gap: 0.25rem;
+    }
+    .input-field label {
+      text-align: left;
+    }
   }
 </style>

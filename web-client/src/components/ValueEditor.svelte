@@ -39,19 +39,20 @@
 
     input {
         width: 100%;
-        padding: 0.5rem 0.75rem;
-        background: rgba(255, 255, 255, 0.05);
+        padding: 0 0.5rem;
+        background: rgba(255, 255, 255, 0.4);
         border: 1px solid var(--glass-border);
-        border-radius: var(--radius-md);
+        border-radius: 2px;
         color: var(--text-primary);
         font-family: inherit;
         transition: all 0.2s ease;
-        height: 42px;
+        height: 28px;
+        font-size: 0.85rem;
     }
 
     input:focus {
         outline: none;
         border-color: var(--primary);
-        background: rgba(255, 255, 255, 0.1);
+        background: rgba(255, 255, 255, 0.6);
     }
 </style>

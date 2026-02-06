@@ -200,64 +200,78 @@
 
 <style>
   .category-box {
-    padding: 1.5rem;
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.02); /* Slight bg for contrast */
+    border: 1px solid var(--glass-border);
+    border-radius: 4px;
   }
 
   .category-title {
-    margin: 0 0 1.25rem 0;
-    font-size: 1.1rem;
+    margin: 0 0 0.75rem 0;
+    font-size: 0.95rem;
     font-weight: 600;
-    text-transform: capitalize;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
     color: var(--text-primary);
+    border-bottom: 1px solid var(--glass-border);
+    padding-bottom: 0.5rem;
+    opacity: 0.9;
   }
 
   .params-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-    gap: 1rem;
-    margin-bottom: 1.25rem;
+    grid-template-columns: 1fr; /* Stack vertically in the column */
+    gap: 0; /* Remove gap, use borders */
+    margin-bottom: 0.75rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
   }
 
   .param-card {
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid var(--glass-border);
-    border-radius: var(--radius-md);
-    padding: 0.875rem;
-    transition: all 0.2s ease;
+    background: transparent;
+    border: none;
+    border-radius: 0;
+    padding: 0.35rem 0;
+
+    display: grid;
+    grid-template-columns: 250px 1fr;
+    align-items: center;
+    gap: 0.75rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
   }
 
   .param-card:hover {
-    background: rgba(255, 255, 255, 0.05);
+    background: rgba(255, 255, 255, 0.02);
   }
 
   label {
     display: block;
     font-size: 0.75rem;
     font-weight: 500;
-    color: var(--text-muted);
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    margin-bottom: 0.5rem;
+    color: var(--text-secondary);
+    text-transform: none;
+    letter-spacing: normal;
+    margin-bottom: 0;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    text-align: right;
   }
 
   .input-group {
     display: flex;
     gap: 0.5rem;
     align-items: center;
+    width: 100%;
   }
 
   .delete-btn {
-    width: 32px;
-    height: 32px;
-    background: rgba(239, 68, 68, 0.15);
-    color: #ef4444;
-    border: 1px solid rgba(239, 68, 68, 0.3);
-    border-radius: var(--radius-md);
-    font-size: 1.25rem;
-    font-weight: bold;
+    width: 20px;
+    height: 20px;
+    background: transparent;
+    color: var(--text-muted);
+    border: none;
+    border-radius: 2px;
+    font-size: 1rem;
     cursor: pointer;
     transition: all 0.2s ease;
     display: flex;
@@ -265,33 +279,48 @@
     justify-content: center;
     padding: 0;
     flex-shrink: 0;
+    opacity: 0;
+  }
+
+  .param-card:hover .delete-btn {
+    opacity: 1;
   }
 
   .delete-btn:hover {
-    background: rgba(239, 68, 68, 0.25);
-    border-color: rgba(239, 68, 68, 0.5);
+    color: #ef4444;
+    background: rgba(239, 68, 68, 0.1);
   }
 
   .add-param {
-    padding-top: 1rem;
-    border-top: 1px dashed var(--glass-border);
+    padding-top: 0.75rem;
+    border-top: none;
     display: flex;
-    gap: 0.75rem;
+    gap: 0.5rem;
+    max-width: 100%;
   }
 
   .add-param input {
     flex: 1;
-    padding: 0.65rem 1rem;
-    background: rgba(255, 255, 255, 0.05);
+    padding: 0.25rem 0.5rem;
+    background: rgba(255, 255, 255, 0.4);
     border: 1px solid var(--glass-border);
-    border-radius: var(--radius-md);
+    border-radius: 2px;
     color: var(--text-primary);
     font-family: inherit;
+    height: 28px;
+    font-size: 0.85rem;
   }
 
   .add-param input:focus {
     outline: none;
     border-color: var(--primary);
+  }
+
+  .add-param button {
+    height: 28px;
+    padding: 0 0.75rem;
+    font-size: 0.85rem;
+    border-radius: 2px;
   }
 
   .add-param input:disabled,
@@ -301,8 +330,8 @@
   }
 
   .bulk-option {
-    margin-top: 0.75rem;
-    padding-top: 0.75rem;
+    margin-top: 0.5rem;
+    padding-top: 0.5rem;
     border-top: 1px dashed rgba(255, 255, 255, 0.1);
   }
 
@@ -311,14 +340,14 @@
     align-items: center;
     gap: 0.5rem;
     cursor: pointer;
-    font-size: 0.875rem;
+    font-size: 0.8rem;
     color: var(--text-secondary);
     user-select: none;
   }
 
   .checkbox-label input[type="checkbox"] {
-    width: 18px;
-    height: 18px;
+    width: 14px;
+    height: 14px;
     cursor: pointer;
     accent-color: var(--primary);
   }
@@ -350,8 +379,8 @@
   }
 
   .mini-spinner {
-    width: 16px;
-    height: 16px;
+    width: 14px;
+    height: 14px;
     border: 2px solid rgba(255, 255, 255, 0.3);
     border-radius: 50%;
     border-top-color: var(--primary);
@@ -361,6 +390,21 @@
   @keyframes spin {
     to {
       transform: rotate(360deg);
+    }
+  }
+
+  @media (max-width: 640px) {
+    .params-grid {
+      grid-template-columns: 1fr;
+    }
+    .param-card {
+      grid-template-columns: 1fr;
+      gap: 0;
+      padding: 0.5rem 0;
+    }
+    label {
+      text-align: left;
+      margin-bottom: 0.25rem;
     }
   }
 </style>

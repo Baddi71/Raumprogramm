@@ -85,21 +85,21 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
-        padding: 0.5rem 0.75rem;
-        background: rgba(255, 255, 255, 0.05);
+        padding: 0 0.5rem;
+        background: rgba(255, 255, 255, 0.4); /* Match input opacity */
         border: 1px solid var(--glass-border);
-        border-radius: var(--radius-md);
+        border-radius: 2px; /* Sharpe corners */
         color: var(--text-primary);
         font-family: inherit;
-        font-size: 1rem;
+        font-size: 0.85rem; /* Match input font size */
         cursor: pointer;
         transition: all 0.2s ease;
-        height: 42px; /* Fixed height to match inputs */
+        height: 28px; /* Match input height */
     }
 
     .select-trigger:hover,
     .select-trigger.active {
-        background: rgba(255, 255, 255, 0.1);
+        background: rgba(255, 255, 255, 0.6);
         border-color: var(--primary);
     }
 
