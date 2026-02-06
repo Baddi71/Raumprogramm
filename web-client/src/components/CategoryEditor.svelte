@@ -141,19 +141,19 @@
             bind:value={categoryData[key]}
             enforceType={getFieldType(key)}
           />
-          <button
+          <!-- <button
             class="delete-btn"
             on:click={() => promptDelete(key)}
             title="Löschen"
           >
             ×
-          </button>
+          </button> -->
         </div>
       </div>
     {/each}
   </div>
 
-  <div class="add-param">
+  <!-- <div class="add-param">
     <input
       placeholder="Neuer Parameter..."
       bind:value={newKey}
@@ -163,7 +163,7 @@
     <button class="btn-secondary" on:click={addParam} disabled={isAddingToAll}>
       {isAddingToAll ? "Wird hinzugefügt..." : "Hinzufügen"}
     </button>
-  </div>
+  </div> -->
 
   {#if currentRoomId && categoryName}
     <div class="bulk-option">
