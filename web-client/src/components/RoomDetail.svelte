@@ -13,15 +13,7 @@
   let loading = true;
   let saving = false;
   // Hardcoded configuration for boolean fields
-  // Add values here in the format: "categories.categoryName.parameterName"
-  const BOOLEAN_FIELDS = ["categories.moebel.schrank"];
-
-  // Populate fieldTypes map for the editors
-  // Value "bool" triggers the dropdown logic in CategoryEditor
-  const fieldTypes = BOOLEAN_FIELDS.reduce((acc, field) => {
-    acc[field] = "bool";
-    return acc;
-  }, {});
+  // Removed as type is now part of the data model
 
   // Simple deep comparison to check for changes
   $: isDirty =
@@ -298,7 +290,6 @@
               title={catName}
               currentRoomId={id}
               categoryName={catName}
-              {fieldTypes}
             />
           {/if}
         {/each}

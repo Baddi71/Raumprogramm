@@ -5,7 +5,7 @@
     export let enforceType = null;
 
     let mode = enforceType === "bool" ? "select" : "input";
-
+    
     // React to prop changes
     $: mode = enforceType === "bool" ? "select" : "input";
 

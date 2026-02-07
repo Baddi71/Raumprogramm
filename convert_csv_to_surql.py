@@ -230,13 +230,41 @@ with open(file_path, 'r', encoding='utf-8-sig') as f:
                 if is_root or cat == 'root':
                     data[key] = parsed_val
                 elif cat == 'general':
+                    # Infer type
+                    param_type = 'text'
+                    if isinstance(parsed_val, bool):
+                        param_type = 'bool'
+                    elif isinstance(parsed_val, (int, float)):
+                        param_type = 'number'
+
+                    # Create parameter object
+                    param_obj = {
+                        "value": parsed_val,
+                        "label": orig_header,
+                        "type": param_type
+                    }
+
                     if 'general' not in data["categories"]:
                          data["categories"]['general'] = {}
-                    data["categories"]['general'][key] = parsed_val
+                    data["categories"]['general'][key] = param_obj
                 else:
+                    # Infer type
+                    param_type = 'text'
+                    if isinstance(parsed_val, bool):
+                        param_type = 'bool'
+                    elif isinstance(parsed_val, (int, float)):
+                        param_type = 'number'
+
+                    # Create parameter object
+                    param_obj = {
+                        "value": parsed_val,
+                        "label": orig_header,
+                        "type": param_type
+                    }
+
                     if cat not in data["categories"]:
                         data["categories"][cat] = {}
-                    data["categories"][cat][key] = parsed_val
+                    data["categories"][cat][key] = param_obj
         
         if "info" not in data:
              data["info"] = {}

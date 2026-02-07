@@ -186,8 +186,8 @@
       }
       // Handle nested properties if needed, e.g. status
       else if (sortField === "status") {
-        fieldA = a.categories?.info?.status || "";
-        fieldB = b.categories?.info?.status || "";
+        fieldA = a.info?.status || "";
+        fieldB = b.info?.status || "";
       }
 
       if (!fieldA) fieldA = "";
@@ -507,7 +507,7 @@
                         ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
                         : 'bg-slate-400/20 text-slate-400 border border-slate-400/30'}"
                   >
-                    {getStatusLabel(room.categories?.info?.status)}
+                    {getStatusLabel(room.info?.status)}
                   </span>
                 </td>
               {/if}
