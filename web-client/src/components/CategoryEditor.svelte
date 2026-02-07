@@ -34,8 +34,15 @@
       return;
     }
 
+    // Default structure for new parameter
+    const newParam = {
+      value: null,
+      label: newKey.trim(), // Use original input as label
+      type: "text", // Default to text, user can't select type yet in UI but text handles most
+    };
+
     // Add to current room
-    categoryData[key] = null;
+    categoryData[key] = newParam;
     categoryData = categoryData;
 
     // If "add to all" is checked, add to all other room types
@@ -70,7 +77,7 @@
             }
 
             // Add the property
-            room.categories[categoryName][key] = null;
+            room.categories[categoryName][key] = newParam;
 
             // Update the room in the database
             await db.update(room.id, room);
@@ -126,13 +133,18 @@
         <label
           for={`param-${key}`}
           class="block overflow-hidden text-ellipsis whitespace-nowrap text-right text-xs font-medium text-text-secondary max-sm:mb-1 max-sm:text-left"
-          >{key.replace(/_/g, " ")}</label
+          >{val?.label || key.replace(/_/g, " ")}</label
         >
         <div class="flex w-full items-center gap-2">
-          <ValueEditor
-            bind:value={categoryData[key]}
-            enforceType={getFieldType(key)}
-          />
+          {#if val && typeof val === "object" && "value" in val}
+            <ValueEditor bind:value={val.value} enforceType={val.type} />
+          {:else}
+            <!-- Fallback for legacy data (should not happen after migration) -->
+            <ValueEditor
+              bind:value={categoryData[key]}
+              enforceType={getFieldType(key)}
+            />
+          {/if}
         </div>
       </div>
     {/each}
