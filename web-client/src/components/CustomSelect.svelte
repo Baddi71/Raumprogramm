@@ -27,9 +27,12 @@
 
 <div class="relative w-full" use:clickOutside on:outclick={handleOutClick}>
     <button
-        class="flex h-7 w-full items-center justify-between rounded-sm border border-white/10 bg-white/5 px-2 text-sm text-text-primary transition-all hover:bg-white/10 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary/30 {isOpen
-            ? 'border-primary bg-white/10 ring-1 ring-primary/30'
+        class="flex h-7 w-full items-center justify-between rounded-sm border px-2 text-sm text-text-primary transition-all focus:outline-none focus:ring-1 focus:ring-primary/30 focus:border-primary {isOpen
+            ? 'border-primary ring-1 ring-primary/30'
             : ''}"
+        style="background-color: var(--input-bg); border-color: {isOpen
+            ? 'var(--primary)'
+            : 'var(--input-border)'};"
         on:click={toggle}
         type="button"
     >

@@ -155,7 +155,7 @@
             <input
               id="room-name"
               bind:value={room.raum_bezeichnung}
-              class="h-7 w-full rounded-sm border border-white/10 bg-white/5 px-2 py-1 text-sm text-text-primary transition-all hover:bg-white/10 focus:border-primary focus:bg-white/10 focus:outline-none focus:ring-1 focus:ring-primary/30"
+              class="input-field"
             />
           </div>
           <div
@@ -169,7 +169,7 @@
             <input
               id="room-type"
               bind:value={room.raumtyp}
-              class="h-7 w-full rounded-sm border border-white/10 bg-white/5 px-2 py-1 text-sm text-text-primary transition-all hover:bg-white/10 focus:border-primary focus:bg-white/10 focus:outline-none focus:ring-1 focus:ring-primary/30"
+              class="input-field"
             />
           </div>
           <div
@@ -184,7 +184,7 @@
               id="room-count"
               type="number"
               bind:value={room.anzahl_räume_summe}
-              class="h-7 w-full rounded-sm border border-white/10 bg-white/5 px-2 py-1 text-sm text-text-primary transition-all hover:bg-white/10 focus:border-primary focus:bg-white/10 focus:outline-none focus:ring-1 focus:ring-primary/30"
+              class="input-field"
             />
           </div>
           <div
@@ -213,7 +213,7 @@
               value={room.teilprojekt?.[0] || ""}
               readonly
               disabled
-              class="h-7 w-full rounded-sm border border-white/10 bg-white/5 px-2 py-1 text-sm text-text-primary opacity-75 transition-all hover:bg-white/10 focus:border-primary focus:bg-white/10 focus:outline-none focus:ring-1 focus:ring-primary/30"
+              class="input-field opacity-75"
             />
           </div>
           <div
@@ -229,7 +229,7 @@
               value={room.nutzer_ebene_1?.[0] || ""}
               readonly
               disabled
-              class="h-7 w-full rounded-sm border border-white/10 bg-white/5 px-2 py-1 text-sm text-text-primary opacity-75 transition-all hover:bg-white/10 focus:border-primary focus:bg-white/10 focus:outline-none focus:ring-1 focus:ring-primary/30"
+              class="input-field opacity-75"
             />
           </div>
           <div
@@ -245,7 +245,7 @@
               value={room.nutzer_ebene_2?.[0] || ""}
               readonly
               disabled
-              class="h-7 w-full rounded-sm border border-white/10 bg-white/5 px-2 py-1 text-sm text-text-primary opacity-75 transition-all hover:bg-white/10 focus:border-primary focus:bg-white/10 focus:outline-none focus:ring-1 focus:ring-primary/30"
+              class="input-field opacity-75"
             />
           </div>
           <div
@@ -261,7 +261,7 @@
               value={room.funktions_bereich?.[0] || ""}
               readonly
               disabled
-              class="h-7 w-full rounded-sm border border-white/10 bg-white/5 px-2 py-1 text-sm text-text-primary opacity-75 transition-all hover:bg-white/10 focus:border-primary focus:bg-white/10 focus:outline-none focus:ring-1 focus:ring-primary/30"
+              class="input-field opacity-75"
             />
           </div>
         </div>

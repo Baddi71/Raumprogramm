@@ -21,10 +21,7 @@
         <CustomSelect bind:value {options} />
     {:else}
         <div class="flex w-full">
-            <input
-                bind:value
-                class="block h-7 w-full rounded-sm border border-white/10 bg-white/5 px-2 py-1 text-sm text-text-primary transition-all hover:bg-white/10 focus:border-primary focus:bg-white/10 focus:outline-none focus:ring-1 focus:ring-primary/30"
-            />
+            <input bind:value class="input-field" />
         </div>
     {/if}
 </div>
