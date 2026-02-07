@@ -108,7 +108,10 @@
   }
 </script>
 
-<div class="rounded border border-white/10 bg-white/5 p-4">
+<div
+  class="rounded border p-4"
+  style="background-color: var(--panel-bg); border-color: var(--panel-border);"
+>
   <h4
     class="mb-3 border-b border-white/10 pb-2 text-sm font-semibold uppercase tracking-wider text-text-primary opacity-90"
   >

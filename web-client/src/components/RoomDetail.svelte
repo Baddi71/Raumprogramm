@@ -137,7 +137,10 @@
     </div>
 
     <div class="grid grid-cols-1 gap-6 items-start xl:grid-cols-2">
-      <div class="relative z-10 rounded bg-white/5 border border-white/10 p-4">
+      <div
+        class="relative z-10 rounded p-4 border"
+        style="background-color: var(--panel-bg); border-color: var(--panel-border);"
+      >
         <h3
           class="mb-3 text-base font-semibold uppercase tracking-wider text-text-primary opacity-80"
         >
@@ -266,7 +269,10 @@
           </div>
         </div>
       </div>
-      <div class="rounded bg-white/5 border border-white/10 p-4">
+      <div
+        class="rounded p-4 border"
+        style="background-color: var(--panel-bg); border-color: var(--panel-border);"
+      >
         <h3
           class="mb-3 text-base font-semibold uppercase tracking-wider text-text-primary opacity-80"
         >

@@ -37,6 +37,10 @@
     --input-border: #cbd5e1;
     --input-hover-bg: #ffffff;
     --input-focus-bg: #ffffff;
+
+    /* Panels */
+    --panel-bg: rgba(255, 255, 255, 0.6);
+    --panel-border: rgba(255, 255, 255, 0.4);
   }
 
   :root[data-theme="dark"] {
@@ -58,6 +62,10 @@
     --input-border: rgba(255, 255, 255, 0.1);
     --input-hover-bg: rgba(255, 255, 255, 0.1);
     --input-focus-bg: rgba(255, 255, 255, 0.1);
+
+    /* Panels */
+    --panel-bg: rgba(255, 255, 255, 0.05);
+    --panel-border: rgba(255, 255, 255, 0.1);
   }
 
   body {
