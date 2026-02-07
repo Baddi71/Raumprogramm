@@ -47,17 +47,29 @@
     }
 </script>
 
-<div class="md-editor glass-panel">
-    <div class="toolbar">
-        <div class="mode-switch">
+<div
+    class="flex flex-col overflow-hidden rounded-[2px] border border-glass-border bg-white/25"
+>
+    <div
+        class="flex items-center justify-between border-b border-glass-border bg-white/10 px-2 py-1"
+    >
+        <div
+            class="flex gap-2 rounded bg-black/20 p-1 dark:bg-black/20 light:bg-black/5"
+        >
             <button
-                class:active={mode === "edit"}
+                class="rounded px-3 py-1 text-sm text-text-secondary transition-all hover:bg-white/10 {mode ===
+                'edit'
+                    ? 'bg-bg-core text-text-primary shadow-sm'
+                    : ''}"
                 on:click={() => (mode = "edit")}
             >
                 Bearbeiten
             </button>
             <button
-                class:active={mode === "preview"}
+                class="rounded px-3 py-1 text-sm text-text-secondary transition-all hover:bg-white/10 {mode ===
+                'preview'
+                    ? 'bg-bg-core text-text-primary shadow-sm'
+                    : ''}"
                 on:click={() => (mode = "preview")}
             >
                 Vorschau
@@ -65,36 +77,48 @@
         </div>
 
         {#if mode === "edit"}
-            <div class="formatting-tools">
-                <button on:click={() => insertText("**", "**")} title="Fett"
-                    >B</button
+            <div class="flex gap-1">
+                <button
+                    class="flex h-7 w-7 items-center justify-center rounded border border-transparent text-sm font-semibold text-text-secondary transition-colors hover:bg-white/10 hover:text-text-primary"
+                    on:click={() => insertText("**", "**")}
+                    title="Fett">B</button
                 >
-                <button on:click={() => insertText("*", "*")} title="Kursiv"
-                    >I</button
+                <button
+                    class="flex h-7 w-7 items-center justify-center rounded border border-transparent text-sm font-semibold text-text-secondary transition-colors hover:bg-white/10 hover:text-text-primary"
+                    on:click={() => insertText("*", "*")}
+                    title="Kursiv">I</button
                 >
-                <button on:click={() => insertText("- ")} title="Liste"
-                    >•</button
+                <button
+                    class="flex h-7 w-7 items-center justify-center rounded border border-transparent text-sm font-semibold text-text-secondary transition-colors hover:bg-white/10 hover:text-text-primary"
+                    on:click={() => insertText("- ")}
+                    title="Liste">•</button
                 >
-                <button on:click={() => insertText("### ")} title="Überschrift"
-                    >H</button
+                <button
+                    class="flex h-7 w-7 items-center justify-center rounded border border-transparent text-sm font-semibold text-text-secondary transition-colors hover:bg-white/10 hover:text-text-primary"
+                    on:click={() => insertText("### ")}
+                    title="Überschrift">H</button
                 >
             </div>
         {/if}
     </div>
 
-    <div class="editor-content">
+    <div class="relative min-h-[200px]">
         {#if mode === "edit"}
             <textarea
                 bind:this={textarea}
-                class="md-input"
+                class="h-full min-h-[200px] w-full resize-y bg-transparent p-4 font-mono text-[0.95rem] leading-relaxed text-text-primary outline-none focus:bg-white/2"
                 bind:value
                 {placeholder}
             ></textarea>
         {:else}
-            <div class="md-preview text-content">
+            <div
+                class="md-preview min-h-[200px] p-4 text-text-primary leading-relaxed"
+            >
                 {@html renderedHtml}
                 {#if !value}
-                    <p class="empty-state">Keine Beschreibung vorhanden.</p>
+                    <p class="italic text-text-muted">
+                        Keine Beschreibung vorhanden.
+                    </p>
                 {/if}
             </div>
         {/if}
@@ -102,107 +126,6 @@
 </div>
 
 <style>
-    .md-editor {
-        display: flex;
-        flex-direction: column;
-        overflow: hidden;
-        background: rgba(
-            255,
-            255,
-            255,
-            0.25
-        ); /* Intermediate contrast for large area */
-        border-radius: 2px;
-        border: 1px solid var(--glass-border);
-    }
-
-    .toolbar {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 0.25rem 0.5rem; /* Compact padding */
-        border-bottom: 1px solid var(--glass-border);
-        background: rgba(255, 255, 255, 0.1);
-    }
-
-    .mode-switch {
-        display: flex;
-        gap: 0.5rem;
-        background: rgba(0, 0, 0, 0.2);
-        padding: 0.25rem;
-        border-radius: var(--radius-md);
-    }
-
-    /* Use :global to match root attribute from component style scope */
-    :global(:root[data-theme="light"]) .mode-switch {
-        background: rgba(0, 0, 0, 0.05);
-    }
-
-    .mode-switch button {
-        padding: 0.25rem 0.75rem;
-        font-size: 0.85rem;
-        color: var(--text-secondary);
-        background: transparent;
-        border-radius: 6px;
-    }
-
-    .mode-switch button.active {
-        background: var(--bg-core);
-        color: var(--text-primary);
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    }
-
-    .formatting-tools button {
-        background: transparent;
-        color: var(--text-secondary);
-        border: 1px solid transparent;
-        border-radius: 4px;
-        width: 28px;
-        height: 28px;
-        font-size: 0.9rem;
-        font-weight: 600;
-    }
-
-    .formatting-tools button:hover {
-        background: rgba(255, 255, 255, 0.1);
-        color: var(--text-primary);
-    }
-
-    .editor-content {
-        position: relative;
-        min-height: 200px;
-    }
-
-    .md-input {
-        width: 100%;
-        min-height: 200px;
-        padding: 1rem;
-        background: transparent;
-        border: none;
-        color: var(--text-primary);
-        font-family: "Courier New", monospace;
-        font-size: 0.95rem;
-        line-height: 1.6;
-        resize: vertical;
-    }
-
-    .md-input:focus {
-        outline: none;
-        background: rgba(255, 255, 255, 0.02);
-    }
-
-    .md-preview {
-        padding: 1rem;
-        min-height: 200px;
-        color: var(--text-primary);
-        line-height: 1.6;
-    }
-
-    .empty-state {
-        color: var(--text-muted);
-        font-style: italic;
-    }
-
     /* Preview Typography */
     .md-preview :global(h1),
     .md-preview :global(h2),

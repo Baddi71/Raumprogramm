@@ -34,11 +34,15 @@
   }
 </script>
 
-<header class="glass-panel">
-  <div class="logo text-gradient">Raumprogramm DB</div>
-  <div class="user-actions">
+<header
+  class="glass-panel sticky top-0 z-[100] m-4 flex items-center justify-between rounded-2xl border-b border-glass-border px-8 py-3 dark:bg-[#0f0c29]/60 bg-white/60 backdrop-blur-xl"
+>
+  <div class="text-gradient text-2xl font-extrabold -tracking-wide">
+    Raumprogramm DB
+  </div>
+  <div class="flex items-center gap-4">
     <button
-      class="theme-toggle"
+      class="flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/5 text-text-primary transition-colors hover:bg-white/15 hover:text-primary"
       on:click={toggleTheme}
       aria-label="Toggle theme"
     >
@@ -84,83 +88,16 @@
     </button>
 
     {#if $isAuthenticated}
-      <div class="user-pill">
-        <span class="avatar">{$user?.name?.[0] || "U"}</span>
-        <span class="username">{$user?.name || "User"}</span>
+      <div
+        class="flex items-center gap-2 rounded-full border border-white/10 bg-white/5 p-1 pr-3"
+      >
+        <span
+          class="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-primary to-secondary text-sm font-bold text-white"
+          >{$user?.name?.[0] || "U"}</span
+        >
+        <span class="text-sm font-medium">{$user?.name || "User"}</span>
       </div>
       <button class="btn-secondary" on:click={logout}>Abmelden</button>
     {/if}
   </div>
 </header>
-
-<style>
-  header {
-    background: rgba(15, 12, 41, 0.6); /* Slightly darker glass for header */
-    padding: 0.8rem 2rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    margin: 1rem;
-    border-radius: 16px;
-    border-bottom: 1px solid var(--glass-border);
-  }
-
-  .logo {
-    font-weight: 800;
-    font-size: 1.5rem;
-    letter-spacing: -0.02em;
-  }
-
-  .user-actions {
-    display: flex;
-    gap: 1rem;
-    align-items: center;
-  }
-
-  .user-pill {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    background: rgba(255, 255, 255, 0.05);
-    padding: 0.25rem 0.75rem 0.25rem 0.25rem;
-    border-radius: 50px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-  }
-
-  .avatar {
-    width: 32px;
-    height: 32px;
-    background: linear-gradient(135deg, var(--primary), var(--secondary));
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: bold;
-    font-size: 0.9rem;
-  }
-
-  .username {
-    font-size: 0.9rem;
-    font-weight: 500;
-  }
-  .theme-toggle {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    color: var(--text-primary);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0;
-  }
-
-  .theme-toggle:hover {
-    background: rgba(255, 255, 255, 0.15);
-    color: var(--primary);
-  }
-</style>

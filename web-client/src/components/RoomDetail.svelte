@@ -110,99 +110,181 @@
 </script>
 
 {#if loading}
-  <div class="loading-container">
-    <div class="spinner"></div>
+  <div class="flex flex-col items-center justify-center gap-4 p-16">
+    <div
+      class="h-10 w-10 animate-spin rounded-full border-[3px] border-white/30 border-t-primary"
+    ></div>
     <p>Lade Details...</p>
   </div>
 {:else if room}
-  <div class="detail-container">
-    <div class="top-actions">
+  <div class="flex flex-col gap-6">
+    <div class="flex items-center justify-between">
       <button class="btn-secondary" on:click={goBack}> ← Zurück </button>
       <button class="btn-primary" on:click={save} disabled={saving}>
         {saving ? "Speichert..." : "Speichern"}
       </button>
     </div>
 
-    <div class="room-header office-panel">
-      <h1>{room.nc_bezeichnung}</h1>
-      <p class="code">Code: {room.nc_code_7_stellig}</p>
+    <div class="rounded bg-white/5 border border-white/10 px-4 py-3">
+      <h1
+        class="m-0 bg-gradient-to-r from-primary to-secondary bg-clip-text text-2xl font-bold text-transparent"
+      >
+        {room.nc_bezeichnung}
+      </h1>
+      <p class="mt-0.5 font-mono text-sm text-text-muted">
+        Code: {room.nc_code_7_stellig}
+      </p>
     </div>
 
-    <div class="split-layout">
-      <div
-        class="section office-panel"
-        style="position: relative; z-index: 10;"
-      >
-        <h3>Stammdaten</h3>
-        <div class="input-grid">
-          <div class="input-field">
-            <label for="room-name">Raumbezeichnung</label>
-            <input id="room-name" bind:value={room.raum_bezeichnung} />
+    <div class="grid grid-cols-1 gap-6 items-start xl:grid-cols-2">
+      <div class="relative z-10 rounded bg-white/5 border border-white/10 p-4">
+        <h3
+          class="mb-3 text-base font-semibold uppercase tracking-wider text-text-primary opacity-80"
+        >
+          Stammdaten
+        </h3>
+        <div class="grid grid-cols-1 gap-2">
+          <div
+            class="grid grid-cols-[250px_1fr] items-center gap-3 max-sm:grid-cols-1 max-sm:gap-1"
+          >
+            <label
+              for="room-name"
+              class="overflow-hidden text-ellipsis whitespace-nowrap text-right text-xs font-medium text-text-secondary transition-colors max-sm:text-left"
+              >Raumbezeichnung</label
+            >
+            <input
+              id="room-name"
+              bind:value={room.raum_bezeichnung}
+              class="h-7 w-full rounded-sm border border-white/10 bg-white/40 px-2 py-1 text-sm text-text-primary transition-all focus:border-primary focus:bg-white/60 focus:outline-none focus:ring-1 focus:ring-primary/30"
+            />
           </div>
-          <div class="input-field">
-            <label for="room-type">Raumtyp</label>
-            <input id="room-type" bind:value={room.raumtyp} />
+          <div
+            class="grid grid-cols-[250px_1fr] items-center gap-3 max-sm:grid-cols-1 max-sm:gap-1"
+          >
+            <label
+              for="room-type"
+              class="overflow-hidden text-ellipsis whitespace-nowrap text-right text-xs font-medium text-text-secondary transition-colors max-sm:text-left"
+              >Raumtyp</label
+            >
+            <input
+              id="room-type"
+              bind:value={room.raumtyp}
+              class="h-7 w-full rounded-sm border border-white/10 bg-white/40 px-2 py-1 text-sm text-text-primary transition-all focus:border-primary focus:bg-white/60 focus:outline-none focus:ring-1 focus:ring-primary/30"
+            />
           </div>
-          <div class="input-field">
-            <label for="room-count">Anzahl Räume</label>
+          <div
+            class="grid grid-cols-[250px_1fr] items-center gap-3 max-sm:grid-cols-1 max-sm:gap-1"
+          >
+            <label
+              for="room-count"
+              class="overflow-hidden text-ellipsis whitespace-nowrap text-right text-xs font-medium text-text-secondary transition-colors max-sm:text-left"
+              >Anzahl Räume</label
+            >
             <input
               id="room-count"
               type="number"
               bind:value={room.anzahl_räume_summe}
+              class="h-7 w-full rounded-sm border border-white/10 bg-white/40 px-2 py-1 text-sm text-text-primary transition-all focus:border-primary focus:bg-white/60 focus:outline-none focus:ring-1 focus:ring-primary/30"
             />
           </div>
-          <div class="input-field">
-            <label for="status-select">Status</label>
+          <div
+            class="grid grid-cols-[250px_1fr] items-center gap-3 max-sm:grid-cols-1 max-sm:gap-1"
+          >
+            <label
+              for="status-select"
+              class="overflow-hidden text-ellipsis whitespace-nowrap text-right text-xs font-medium text-text-secondary transition-colors max-sm:text-left"
+              >Status</label
+            >
             <!-- Using a wrapper div to avoid A11y label issues since custom component handles its own ID internally or via prop -->
-            <StatusSelect bind:value={room.info.status} />
+            <div class="w-full">
+              <StatusSelect bind:value={room.info.status} />
+            </div>
           </div>
-          <div class="input-field">
-            <label for="teilprojekt">Teilprojekt</label>
+          <div
+            class="grid grid-cols-[250px_1fr] items-center gap-3 max-sm:grid-cols-1 max-sm:gap-1"
+          >
+            <label
+              for="teilprojekt"
+              class="overflow-hidden text-ellipsis whitespace-nowrap text-right text-xs font-medium text-text-secondary transition-colors max-sm:text-left"
+              >Teilprojekt</label
+            >
             <input
               id="teilprojekt"
               value={room.teilprojekt?.[0] || ""}
               readonly
               disabled
+              class="h-7 w-full rounded-sm border border-white/10 bg-white/40 px-2 py-1 text-sm text-text-primary opacity-75 transition-all focus:border-primary focus:bg-white/60 focus:outline-none focus:ring-1 focus:ring-primary/30"
             />
           </div>
-          <div class="input-field">
-            <label for="nutzer1">Nutzer Ebene 1</label>
+          <div
+            class="grid grid-cols-[250px_1fr] items-center gap-3 max-sm:grid-cols-1 max-sm:gap-1"
+          >
+            <label
+              for="nutzer1"
+              class="overflow-hidden text-ellipsis whitespace-nowrap text-right text-xs font-medium text-text-secondary transition-colors max-sm:text-left"
+              >Nutzer Ebene 1</label
+            >
             <input
               id="nutzer1"
               value={room.nutzer_ebene_1?.[0] || ""}
               readonly
               disabled
+              class="h-7 w-full rounded-sm border border-white/10 bg-white/40 px-2 py-1 text-sm text-text-primary opacity-75 transition-all focus:border-primary focus:bg-white/60 focus:outline-none focus:ring-1 focus:ring-primary/30"
             />
           </div>
-          <div class="input-field">
-            <label for="nutzer2">Nutzer Ebene 2</label>
+          <div
+            class="grid grid-cols-[250px_1fr] items-center gap-3 max-sm:grid-cols-1 max-sm:gap-1"
+          >
+            <label
+              for="nutzer2"
+              class="overflow-hidden text-ellipsis whitespace-nowrap text-right text-xs font-medium text-text-secondary transition-colors max-sm:text-left"
+              >Nutzer Ebene 2</label
+            >
             <input
               id="nutzer2"
               value={room.nutzer_ebene_2?.[0] || ""}
               readonly
               disabled
+              class="h-7 w-full rounded-sm border border-white/10 bg-white/40 px-2 py-1 text-sm text-text-primary opacity-75 transition-all focus:border-primary focus:bg-white/60 focus:outline-none focus:ring-1 focus:ring-primary/30"
             />
           </div>
-          <div class="input-field">
-            <label for="funktionsbereich">Funktionsbereich</label>
+          <div
+            class="grid grid-cols-[250px_1fr] items-center gap-3 max-sm:grid-cols-1 max-sm:gap-1"
+          >
+            <label
+              for="funktionsbereich"
+              class="overflow-hidden text-ellipsis whitespace-nowrap text-right text-xs font-medium text-text-secondary transition-colors max-sm:text-left"
+              >Funktionsbereich</label
+            >
             <input
               id="funktionsbereich"
               value={room.funktions_bereich?.[0] || ""}
               readonly
               disabled
+              class="h-7 w-full rounded-sm border border-white/10 bg-white/40 px-2 py-1 text-sm text-text-primary opacity-75 transition-all focus:border-primary focus:bg-white/60 focus:outline-none focus:ring-1 focus:ring-primary/30"
             />
           </div>
         </div>
       </div>
-      <div class="section office-panel">
-        <h3>Beschreibung</h3>
+      <div class="rounded bg-white/5 border border-white/10 p-4">
+        <h3
+          class="mb-3 text-base font-semibold uppercase tracking-wider text-text-primary opacity-80"
+        >
+          Beschreibung
+        </h3>
         <MarkdownEditor bind:value={room.description} />
       </div>
     </div>
 
-    <div class="categories-section">
-      <h3>Kategorien</h3>
-      <div class="categories-grid">
+    <div class="mt-4">
+      <h3
+        class="mb-2 pl-4 text-base font-semibold uppercase tracking-wider text-text-primary opacity-80"
+      >
+        Kategorien
+      </h3>
+      <div
+        class="grid grid-cols-1 gap-4 p-4 pb-4 lg:grid-cols-2 max-lg:grid-cols-1"
+      >
         {#each Object.keys(room.categories) as catName}
           {#if catName !== "info"}
             <CategoryEditor
@@ -218,198 +300,8 @@
     </div>
   </div>
 {:else}
-  <div class="error-container glass-panel">
-    <p>Raum nicht gefunden.</p>
+  <div class="glass-panel p-8 text-center">
+    <p class="mb-4">Raum nicht gefunden.</p>
     <button class="btn-secondary" on:click={goBack}>Zurück</button>
   </div>
 {/if}
-
-<style>
-  .loading-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 4rem;
-    gap: 1rem;
-  }
-
-  .spinner {
-    width: 40px;
-    height: 40px;
-    border: 3px solid rgba(255, 255, 255, 0.3);
-    border-radius: 50%;
-    border-top-color: var(--primary);
-    animation: spin 1s ease-in-out infinite;
-  }
-
-  @keyframes spin {
-    to {
-      transform: rotate(360deg);
-    }
-  }
-
-  .detail-container {
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-  }
-
-  .top-actions {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-
-  /* New Office Panel Style to replace glass-panel */
-  .office-panel {
-    background: rgba(255, 255, 255, 0.02);
-    border: 1px solid var(--glass-border);
-    border-radius: 4px;
-    /* Remove shadow for flatter look or keep minimal */
-  }
-
-  .split-layout {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1.5rem;
-    align-items: start; /* Ensure panels don't stretch weirdly if one is short */
-  }
-
-  .room-header {
-    padding: 0.75rem 1rem;
-    /* border-bottom removed as it's handled by office-panel border */
-  }
-
-  .room-header h1 {
-    margin: 0;
-    font-size: 1.5rem;
-    font-weight: 700;
-    background: linear-gradient(to right, var(--primary), var(--secondary));
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-  }
-
-  .code {
-    margin: 0.1rem 0 0 0;
-    color: var(--text-muted);
-    font-family: "Courier New", monospace;
-    font-size: 0.85rem;
-  }
-
-  .section {
-    padding: 1rem;
-    /* border-bottom removed */
-  }
-
-  h3 {
-    margin: 0 0 0.75rem 0;
-    font-size: 1rem;
-    font-weight: 600;
-    color: var(--text-primary);
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    opacity: 0.8;
-  }
-
-  .input-grid {
-    display: grid;
-    /* In split layout, we want just one column of inputs */
-    grid-template-columns: 1fr;
-    gap: 0.5rem 0; /* No horizontal gap needed */
-  }
-
-  .input-field {
-    display: grid;
-    grid-template-columns: 250px 1fr;
-    align-items: center;
-    gap: 0.75rem;
-  }
-
-  .input-field label {
-    font-size: 0.75rem;
-    font-weight: 500;
-    color: var(--text-secondary);
-    text-transform: none;
-    letter-spacing: normal;
-    transition: color 0.2s ease;
-    text-align: right;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
-  .input-field input {
-    padding: 0.25rem 0.5rem;
-    background: rgba(
-      255,
-      255,
-      255,
-      0.4
-    ); /* Increased opacity for better contrast */
-    border: 1px solid var(--glass-border);
-    border-radius: 2px; /* sharper corners for office look */
-    color: var(--text-primary);
-    font-family: inherit;
-    transition: all 0.2s ease;
-    font-size: 0.85rem;
-    height: 28px; /* Ultra compact */
-  }
-
-  .input-field input:focus {
-    outline: none;
-    border-color: var(--primary);
-    background: rgba(255, 255, 255, 0.6);
-    box-shadow: 0 0 0 1px rgba(168, 85, 247, 0.3);
-  }
-
-  .input-field:focus-within label {
-    color: var(--primary);
-  }
-
-  .categories-section {
-    margin-top: 1rem;
-  }
-
-  .categories-section h3 {
-    margin-bottom: 0.5rem;
-    padding-left: 1rem;
-  }
-
-  .categories-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr; /* Two columns */
-    gap: 1rem;
-    padding: 0 1rem 1rem 1rem;
-  }
-
-  .error-container {
-    padding: 2rem;
-    text-align: center;
-  }
-
-  @media (max-width: 1200px) {
-    .split-layout {
-      grid-template-columns: 1fr;
-    }
-  }
-
-  @media (max-width: 1024px) {
-    .categories-grid {
-      grid-template-columns: 1fr;
-    }
-  }
-
-  @media (max-width: 640px) {
-    .input-grid {
-      grid-template-columns: 1fr;
-    }
-    .input-field {
-      grid-template-columns: 1fr;
-      gap: 0.25rem;
-    }
-    .input-field label {
-      text-align: left;
-    }
-  }
-</style>

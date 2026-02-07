@@ -16,43 +16,18 @@
     ];
 </script>
 
-<div class="value-editor">
+<div class="flex-1 min-w-0">
     {#if mode === "select"}
         <CustomSelect bind:value {options} />
     {:else}
-        <div class="input-wrapper">
-            <input bind:value />
+        <div class="flex w-full">
+            <input
+                bind:value
+                class="block h-7 w-full rounded-sm border border-white/10 bg-white/40 px-2 py-1 text-sm text-text-primary transition-all focus:border-primary focus:bg-white/60 focus:outline-none focus:ring-1 focus:ring-primary/30"
+            />
         </div>
     {/if}
 </div>
 
 <style>
-    .value-editor {
-        flex: 1;
-        min-width: 0;
-    }
-
-    .input-wrapper {
-        display: flex;
-        width: 100%;
-    }
-
-    input {
-        width: 100%;
-        padding: 0 0.5rem;
-        background: rgba(255, 255, 255, 0.4);
-        border: 1px solid var(--glass-border);
-        border-radius: 2px;
-        color: var(--text-primary);
-        font-family: inherit;
-        transition: all 0.2s ease;
-        height: 28px;
-        font-size: 0.85rem;
-    }
-
-    input:focus {
-        outline: none;
-        border-color: var(--primary);
-        background: rgba(255, 255, 255, 0.6);
-    }
 </style>
