@@ -211,35 +211,53 @@
 </script>
 
 {#if loading}
-  <div class="loading-container">
-    <div class="spinner"></div>
-    <p>Lade Raumtypen...</p>
+  <div class="flex h-64 flex-col items-center justify-center gap-4">
+    <div
+      class="h-10 w-10 animate-spin rounded-full border-4 border-white/30 border-t-primary"
+    ></div>
+    <p class="text-text-muted">Lade Raumtypen...</p>
   </div>
 {:else}
-  <div class="room-list-container">
-    <div class="header-section">
-      <div class="title-row">
-        <h2>Raumtypen</h2>
-        <p class="subtitle">{filteredRooms.length} Räume gefunden</p>
+  <div class="flex flex-col gap-6">
+    <div class="flex flex-wrap items-end justify-between gap-4">
+      <div>
+        <h2
+          class="bg-gradient-to-r from-primary to-secondary bg-clip-text text-3xl font-bold text-transparent"
+        >
+          Raumtypen
+        </h2>
+        <p class="mt-2 text-sm text-text-muted">
+          {filteredRooms.length} Räume gefunden
+        </p>
       </div>
-      <div class="search-sort-controls">
+
+      <div class="flex flex-wrap items-center gap-4">
         <!-- Filters -->
-        <div class="filters">
-          <select bind:value={filterTeilprojekt} class="filter-select">
+        <div class="flex flex-wrap gap-2">
+          <select
+            bind:value={filterTeilprojekt}
+            class="h-9 min-w-[150px] appearance-none rounded-md border border-glass-border bg-white/5 bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20fill%3D%22none%22%20viewBox%3D%220%200%2024%2024%22%20stroke%3D%22%2394a3b8%22%3E%3Cpath%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%20stroke-width%3D%222%22%20d%3D%22M19%209l-7%207-7-7%22%2F%3E%3C%2Fsvg%3E')] bg-[length:1.25em] bg-[position:right_0.5rem_center] bg-no-repeat px-4 py-1 text-sm text-text-primary outline-none transition-all focus:border-primary focus:bg-white/10"
+          >
             <option value="">Alle Teilprojekte</option>
             {#each uniqueTeilprojekte as tp}
               <option value={tp}>{tp}</option>
             {/each}
           </select>
 
-          <select bind:value={filterRaumtyp} class="filter-select">
+          <select
+            bind:value={filterRaumtyp}
+            class="h-9 min-w-[150px] appearance-none rounded-md border border-glass-border bg-white/5 bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20fill%3D%22none%22%20viewBox%3D%220%200%2024%2024%22%20stroke%3D%22%2394a3b8%22%3E%3Cpath%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%20stroke-width%3D%222%22%20d%3D%22M19%209l-7%207-7-7%22%2F%3E%3C%2Fsvg%3E')] bg-[length:1.25em] bg-[position:right_0.5rem_center] bg-no-repeat px-4 py-1 text-sm text-text-primary outline-none transition-all focus:border-primary focus:bg-white/10"
+          >
             <option value="">Alle Raumtypen</option>
             {#each uniqueRaumtypen as rt}
               <option value={rt}>{rt}</option>
             {/each}
           </select>
 
-          <select bind:value={filterNutzer} class="filter-select">
+          <select
+            bind:value={filterNutzer}
+            class="h-9 min-w-[150px] appearance-none rounded-md border border-glass-border bg-white/5 bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20fill%3D%22none%22%20viewBox%3D%220%200%2024%2024%22%20stroke%3D%22%2394a3b8%22%3E%3Cpath%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%20stroke-width%3D%222%22%20d%3D%22M19%209l-7%207-7-7%22%2F%3E%3C%2Fsvg%3E')] bg-[length:1.25em] bg-[position:right_0.5rem_center] bg-no-repeat px-4 py-1 text-sm text-text-primary outline-none transition-all focus:border-primary focus:bg-white/10"
+          >
             <option value="">Alle Nutzer</option>
             {#each uniqueNutzer as user}
               <option value={user}>{user}</option>
@@ -247,12 +265,11 @@
           </select>
 
           <!-- Column Toggle -->
-          <div class="column-toggle" style="position: relative;">
+          <div class="relative">
             <button
-              class="btn-icon"
+              class="flex h-9 items-center justify-center rounded-md border border-glass-border bg-transparent p-2 text-text-muted transition-all hover:bg-white/10 hover:text-primary hover:-translate-y-px"
               on:click={() => (showColumnDropdown = !showColumnDropdown)}
               title="Spalten anpassen"
-              style="height: 100%; border: 1px solid var(--glass-border); border-radius: var(--radius-md); padding: 0 1rem;"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -280,13 +297,18 @@
               </svg>
             </button>
             {#if showColumnDropdown}
-              <div class="dropdown-menu">
+              <div
+                class="absolute right-0 top-full mt-2 min-w-[200px] z-50 rounded-md border border-glass-border bg-[#1e293b] p-2 shadow-lg"
+              >
                 {#each columns as col}
-                  <label class="dropdown-item">
+                  <label
+                    class="flex cursor-pointer select-none items-center gap-2 rounded-sm p-2 text-text-primary hover:bg-white/10"
+                  >
                     <input
                       type="checkbox"
                       checked={col.visible}
                       on:change={() => toggleColumn(col.id)}
+                      class="cursor-pointer"
                     />
                     {col.label}
                   </label>
@@ -296,8 +318,9 @@
           </div>
         </div>
 
-        <div class="search-box">
+        <div class="relative w-[250px]">
           <svg
+            class="absolute left-2.5 top-1/2 -translate-y-1/2 text-text-muted pointer-events-none"
             xmlns="http://www.w3.org/2000/svg"
             width="18"
             height="18"
@@ -311,56 +334,63 @@
             <circle cx="11" cy="11" r="8"></circle>
             <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
           </svg>
-          <input type="text" placeholder="Suchen..." bind:value={searchQuery} />
+          <input
+            type="text"
+            placeholder="Suchen..."
+            bind:value={searchQuery}
+            class="w-full rounded-md border border-glass-border bg-white/5 pl-9 pr-2 py-2 text-text-primary outline-none transition-all focus:bg-white/10 focus:border-primary"
+          />
         </div>
       </div>
     </div>
 
-    <div class="table-wrapper glass-panel">
-      <table>
-        <thead>
+    <div class="glass-panel overflow-x-auto p-0">
+      <table class="w-full border-separate border-spacing-0">
+        <thead class="sticky top-0 z-10 bg-white/5">
           <tr>
-            {#if true}
-              <th
-                class="sortable"
-                on:click={() => handleSort("nc_code_7_stellig")}
-              >
-                NC Code
-                {#if sortField === "nc_code_7_stellig"}
-                  <span class="sort-icon"
-                    >{sortDirection === "asc" ? "↑" : "↓"}</span
-                  >
-                {/if}
-              </th>
-            {/if}
-            {#if true}
-              <th
-                class="sortable"
-                on:click={() => handleSort("nc_bezeichnung")}
-              >
-                Bezeichnung
-                {#if sortField === "nc_bezeichnung"}
-                  <span class="sort-icon"
-                    >{sortDirection === "asc" ? "↑" : "↓"}</span
-                  >
-                {/if}
-              </th>
-            {/if}
+            <th
+              class="cursor-pointer select-none whitespace-nowrap border-b border-glass-border p-4 text-left text-sm font-semibold uppercase tracking-wider text-text-secondary transition-colors hover:bg-white/5 hover:text-primary"
+              on:click={() => handleSort("nc_code_7_stellig")}
+            >
+              NC Code
+              {#if sortField === "nc_code_7_stellig"}
+                <span class="ml-2 inline-block text-primary"
+                  >{sortDirection === "asc" ? "↑" : "↓"}</span
+                >
+              {/if}
+            </th>
+            <th
+              class="cursor-pointer select-none whitespace-nowrap border-b border-glass-border p-4 text-left text-sm font-semibold uppercase tracking-wider text-text-secondary transition-colors hover:bg-white/5 hover:text-primary"
+              on:click={() => handleSort("nc_bezeichnung")}
+            >
+              Bezeichnung
+              {#if sortField === "nc_bezeichnung"}
+                <span class="ml-2 inline-block text-primary"
+                  >{sortDirection === "asc" ? "↑" : "↓"}</span
+                >
+              {/if}
+            </th>
             {#if visibleColumnIds.has("teilprojekt")}
-              <th class="sortable" on:click={() => handleSort("teilprojekt")}>
+              <th
+                class="cursor-pointer select-none whitespace-nowrap border-b border-glass-border p-4 text-left text-sm font-semibold uppercase tracking-wider text-text-secondary transition-colors hover:bg-white/5 hover:text-primary"
+                on:click={() => handleSort("teilprojekt")}
+              >
                 Teilprojekt
                 {#if sortField === "teilprojekt"}
-                  <span class="sort-icon"
+                  <span class="ml-2 inline-block text-primary"
                     >{sortDirection === "asc" ? "↑" : "↓"}</span
                   >
                 {/if}
               </th>
             {/if}
             {#if visibleColumnIds.has("nutzer")}
-              <th class="sortable" on:click={() => handleSort("nutzer")}>
+              <th
+                class="cursor-pointer select-none whitespace-nowrap border-b border-glass-border p-4 text-left text-sm font-semibold uppercase tracking-wider text-text-secondary transition-colors hover:bg-white/5 hover:text-primary"
+                on:click={() => handleSort("nutzer")}
+              >
                 Nutzer
                 {#if sortField === "nutzer"}
-                  <span class="sort-icon"
+                  <span class="ml-2 inline-block text-primary"
                     >{sortDirection === "asc" ? "↑" : "↓"}</span
                   >
                 {/if}
@@ -368,89 +398,125 @@
             {/if}
             {#if visibleColumnIds.has("funktionsbereich")}
               <th
-                class="sortable"
+                class="cursor-pointer select-none whitespace-nowrap border-b border-glass-border p-4 text-left text-sm font-semibold uppercase tracking-wider text-text-secondary transition-colors hover:bg-white/5 hover:text-primary"
                 on:click={() => handleSort("funktionsbereich")}
               >
                 Funktionsbereich
                 {#if sortField === "funktionsbereich"}
-                  <span class="sort-icon"
+                  <span class="ml-2 inline-block text-primary"
                     >{sortDirection === "asc" ? "↑" : "↓"}</span
                   >
                 {/if}
               </th>
             {/if}
             {#if visibleColumnIds.has("raumtyp")}
-              <th class="sortable" on:click={() => handleSort("raumtyp")}>
+              <th
+                class="cursor-pointer select-none whitespace-nowrap border-b border-glass-border p-4 text-left text-sm font-semibold uppercase tracking-wider text-text-secondary transition-colors hover:bg-white/5 hover:text-primary"
+                on:click={() => handleSort("raumtyp")}
+              >
                 Raumtyp
                 {#if sortField === "raumtyp"}
-                  <span class="sort-icon"
+                  <span class="ml-2 inline-block text-primary"
                     >{sortDirection === "asc" ? "↑" : "↓"}</span
                   >
                 {/if}
               </th>
             {/if}
             {#if visibleColumnIds.has("status")}
-              <th class="sortable" on:click={() => handleSort("status")}>
+              <th
+                class="cursor-pointer select-none whitespace-nowrap border-b border-glass-border p-4 text-left text-sm font-semibold uppercase tracking-wider text-text-secondary transition-colors hover:bg-white/5 hover:text-primary"
+                on:click={() => handleSort("status")}
+              >
                 Status
                 {#if sortField === "status"}
-                  <span class="sort-icon"
+                  <span class="ml-2 inline-block text-primary"
                     >{sortDirection === "asc" ? "↑" : "↓"}</span
                   >
                 {/if}
               </th>
             {/if}
-            <th>Aktion</th>
+            <th
+              class="whitespace-nowrap border-b border-glass-border p-4 text-left text-sm font-semibold uppercase tracking-wider text-text-secondary"
+              >Aktion</th
+            >
           </tr>
         </thead>
         <tbody>
           {#each filteredRooms as room (room.id)}
-            <tr>
-              {#if true}
-                <td class="code" data-label="NC Code"
-                  >{room.nc_code_7_stellig || room.id}</td
-                >
-              {/if}
-              {#if true}
-                <td class="name" data-label="Bezeichnung"
-                  >{room.nc_bezeichnung}</td
-                >
-              {/if}
+            <tr class="group transition-colors hover:bg-white/5">
+              <td
+                class="whitespace-nowrap border-b border-white/5 p-4 font-mono font-medium text-primary max-sm:flex max-sm:justify-between max-sm:text-right max-sm:before:content-[attr(data-label)] max-sm:before:mr-4 max-sm:before:font-semibold max-sm:before:text-text-muted max-sm:before:uppercase max-sm:before:text-xs"
+                data-label="NC Code"
+              >
+                {room.nc_code_7_stellig || room.id}
+              </td>
+              <td
+                class="border-b border-white/5 p-4 font-medium text-text-primary max-sm:flex max-sm:justify-between max-sm:text-right max-sm:before:content-[attr(data-label)] max-sm:before:mr-4 max-sm:before:font-semibold max-sm:before:text-text-muted max-sm:before:uppercase max-sm:before:text-xs"
+                data-label="Bezeichnung"
+              >
+                {room.nc_bezeichnung}
+              </td>
               {#if visibleColumnIds.has("teilprojekt")}
-                <td data-label="Teilprojekt"
-                  >{Array.isArray(room.teilprojekt)
-                    ? room.teilprojekt[0] || "-"
-                    : room.teilprojekt || "-"}</td
+                <td
+                  class="border-b border-white/5 p-4 text-text-primary max-sm:flex max-sm:justify-between max-sm:text-right max-sm:before:content-[attr(data-label)] max-sm:before:mr-4 max-sm:before:font-semibold max-sm:before:text-text-muted max-sm:before:uppercase max-sm:before:text-xs"
+                  data-label="Teilprojekt"
                 >
+                  {Array.isArray(room.teilprojekt)
+                    ? room.teilprojekt[0] || "-"
+                    : room.teilprojekt || "-"}
+                </td>
               {/if}
               {#if visibleColumnIds.has("nutzer")}
-                <td data-label="Nutzer"
-                  >{Array.isArray(room.nutzer)
-                    ? room.nutzer[0] || "-"
-                    : room.nutzer || "-"}</td
+                <td
+                  class="border-b border-white/5 p-4 text-text-primary max-sm:flex max-sm:justify-between max-sm:text-right max-sm:before:content-[attr(data-label)] max-sm:before:mr-4 max-sm:before:font-semibold max-sm:before:text-text-muted max-sm:before:uppercase max-sm:before:text-xs"
+                  data-label="Nutzer"
                 >
+                  {Array.isArray(room.nutzer)
+                    ? room.nutzer[0] || "-"
+                    : room.nutzer || "-"}
+                </td>
               {/if}
               {#if visibleColumnIds.has("funktionsbereich")}
-                <td data-label="Funktionsbereich"
-                  >{Array.isArray(room.funktionsbereich)
-                    ? room.funktionsbereich[0] || "-"
-                    : room.funktionsbereich || "-"}</td
+                <td
+                  class="border-b border-white/5 p-4 text-text-primary max-sm:flex max-sm:justify-between max-sm:text-right max-sm:before:content-[attr(data-label)] max-sm:before:mr-4 max-sm:before:font-semibold max-sm:before:text-text-muted max-sm:before:uppercase max-sm:before:text-xs"
+                  data-label="Funktionsbereich"
                 >
+                  {Array.isArray(room.funktionsbereich)
+                    ? room.funktionsbereich[0] || "-"
+                    : room.funktionsbereich || "-"}
+                </td>
               {/if}
               {#if visibleColumnIds.has("raumtyp")}
-                <td data-label="Raumtyp">{room.raumtyp}</td>
+                <td
+                  class="border-b border-white/5 p-4 text-text-primary max-sm:flex max-sm:justify-between max-sm:text-right max-sm:before:content-[attr(data-label)] max-sm:before:mr-4 max-sm:before:font-semibold max-sm:before:text-text-muted max-sm:before:uppercase max-sm:before:text-xs"
+                  data-label="Raumtyp"
+                >
+                  {room.raumtyp}
+                </td>
               {/if}
               {#if visibleColumnIds.has("status")}
-                <td data-label="Status">
+                <td
+                  class="border-b border-white/5 p-4 max-sm:flex max-sm:justify-between max-sm:text-right max-sm:before:content-[attr(data-label)] max-sm:before:mr-4 max-sm:before:font-semibold max-sm:before:text-text-muted max-sm:before:uppercase max-sm:before:text-xs"
+                  data-label="Status"
+                >
                   <span
-                    class="status-badge {getStatusClass(room.info?.status)}"
+                    class="inline-block px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider
+                    {room.info?.status === 'in_progress'
+                      ? 'bg-blue-500/20 text-blue-400 border border-blue-500/30'
+                      : room.info?.status === 'completed'
+                        ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
+                        : 'bg-slate-400/20 text-slate-400 border border-slate-400/30'}"
                   >
                     {getStatusLabel(room.categories?.info?.status)}
                   </span>
                 </td>
               {/if}
-              <td data-label="Aktion">
+              <td
+                class="border-b border-white/5 p-4 max-sm:flex max-sm:justify-end max-sm:border-b-0"
+                data-label="Aktion"
+              >
                 <button
-                  class="btn-icon"
+                  class="flex h-8 w-8 items-center justify-center rounded-md text-text-muted transition-all hover:bg-white/10 hover:text-primary hover:-translate-y-px"
                   on:click={() => selectRoom(room.id)}
                   title="Bearbeiten"
                 >
@@ -483,289 +549,12 @@
 {/if}
 
 <style>
-  .loading-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 4rem;
-    gap: 1rem;
-  }
-
-  .spinner {
-    width: 40px;
-    height: 40px;
-    border: 3px solid rgba(255, 255, 255, 0.3);
-    border-radius: 50%;
-    border-top-color: var(--primary);
-    animation: spin 1s ease-in-out infinite;
-  }
-
-  @keyframes spin {
-    to {
-      transform: rotate(360deg);
-    }
-  }
-
-  .room-list-container {
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-  }
-
-  .header-section {
-    margin-bottom: 0.5rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-    gap: 1rem;
-    flex-wrap: wrap;
-  }
-
-  .title-row {
-    flex: 1;
-  }
-
-  .search-box {
-    position: relative;
-    width: 250px;
-  }
-
-  .search-box svg {
-    position: absolute;
-    left: 10px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: var(--text-muted);
-    pointer-events: none;
-  }
-
-  .search-box input {
-    width: 100%;
-    padding: 0.5rem 0.5rem 0.5rem 2.25rem;
-    border-radius: var(--radius-md);
-    border: 1px solid var(--glass-border);
-    background: rgba(255, 255, 255, 0.05);
-    color: var(--text-primary);
-    outline: none;
-    transition: all 0.2s ease;
-  }
-
-  .search-box input:focus {
-    border-color: var(--primary);
-    background: rgba(255, 255, 255, 0.1);
-  }
-
-  h2 {
-    font-size: 2rem;
-    font-weight: 700;
-    margin: 0;
-    background: linear-gradient(to right, var(--primary), var(--secondary));
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-  }
-
-  .subtitle {
-    color: var(--text-muted);
-    margin: 0.5rem 0 0 0;
-    font-size: 0.9rem;
-  }
-
-  .table-wrapper {
-    overflow-x: auto;
-    padding: 0;
-  }
-
-  table {
-    width: 100%;
-    border-collapse: separate;
-    border-spacing: 0;
-  }
-
-  thead {
-    background: rgba(255, 255, 255, 0.03);
-    position: sticky;
-    top: 0;
-    z-index: 10;
-  }
-
-  th {
-    text-align: left;
-    padding: 1rem 1.5rem;
-    font-weight: 600;
-    font-size: 0.875rem;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: var(--text-secondary);
-    border-bottom: 1px solid var(--glass-border);
-    user-select: none;
-  }
-
-  th.sortable {
-    cursor: pointer;
-    transition: color 0.2s;
-  }
-
-  th.sortable:hover {
-    color: var(--primary);
-    background: rgba(255, 255, 255, 0.02);
-  }
-
-  .sort-icon {
-    display: inline-block;
-    margin-left: 0.5rem;
-    color: var(--primary);
-  }
-
-  td {
-    padding: 1rem 1.5rem;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-    color: var(--text-primary);
-  }
-
-  tbody tr {
-    transition: background 0.2s ease;
-  }
-
-  tbody tr:hover {
-    background: rgba(255, 255, 255, 0.03);
-  }
-
-  tbody tr:last-child td {
-    border-bottom: none;
-  }
-
-  .code {
-    font-family: "Courier New", monospace;
-    color: var(--primary);
-    font-weight: 500;
-  }
-
-  .name {
-    font-weight: 500;
-  }
-
-  .status-badge {
-    display: inline-block;
-    padding: 0.25rem 0.75rem;
-    border-radius: 999px;
-    font-size: 0.75rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-  }
-
-  .status-pending {
-    background: rgba(148, 163, 184, 0.2);
-    color: var(--text-muted);
-    border: 1px solid rgba(148, 163, 184, 0.3);
-  }
-
-  .status-progress {
-    background: rgba(59, 130, 246, 0.2);
-    color: #60a5fa;
-    border: 1px solid rgba(59, 130, 246, 0.3);
-  }
-
-  .status-completed {
-    background: rgba(16, 185, 129, 0.2);
-    color: #34d399;
-    border: 1px solid rgba(16, 185, 129, 0.3);
-  }
-
-  .btn-icon {
-    background: transparent;
-    color: var(--text-muted);
-    padding: 0.5rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: var(--radius-md);
-    transition: all 0.2s ease;
-  }
-
-  .btn-icon:hover {
-    background: rgba(255, 255, 255, 0.1);
-    color: var(--primary);
-    transform: translateY(-1px);
-  }
-
-  .search-sort-controls {
-    display: flex;
-    gap: 1rem;
-    align-items: center;
-    flex-wrap: wrap;
-  }
-
-  .filters {
-    display: flex;
-    gap: 0.5rem;
-    flex-wrap: wrap;
-  }
-
-  .filter-select {
-    padding: 0.5rem 2rem 0.5rem 1rem;
-    border-radius: var(--radius-md);
-    border: 1px solid var(--glass-border);
-    background: rgba(255, 255, 255, 0.05);
-    color: var(--text-primary);
-    outline: none;
-    cursor: pointer;
-    font-size: 0.9rem;
-    appearance: none;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2394a3b8'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 0.5rem center;
-    background-size: 1.25em;
-    min-width: 150px;
-  }
-
-  .filter-select:focus {
-    border-color: var(--primary);
-    background-color: rgba(255, 255, 255, 0.1);
-  }
-
-  .dropdown-menu {
-    position: absolute;
-    top: 100%;
-    right: 0;
-    margin-top: 0.5rem;
-    background: #1e293b;
-    border: 1px solid var(--glass-border);
-    border-radius: var(--radius-md);
-    padding: 0.5rem;
-    box-shadow:
-      0 4px 6px -1px rgba(0, 0, 0, 0.1),
-      0 2px 4px -1px rgba(0, 0, 0, 0.06);
-    z-index: 50;
-    min-width: 200px;
-  }
-
-  .dropdown-item {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.5rem;
-    color: var(--text-primary);
-    cursor: pointer;
-    border-radius: var(--radius-sm);
-    user-select: none;
-  }
-
-  .dropdown-item:hover {
-    background: rgba(255, 255, 255, 0.1);
-  }
-
-  .dropdown-item input {
-    cursor: pointer;
-  }
-
+  /* Styles handled by Tailwind utilities */
+  /* Responsive styles for mobile table view mimicking the original behavior */
   @media (max-width: 768px) {
     thead {
       display: none;
     }
-
     table,
     tbody,
     tr,
@@ -773,44 +562,13 @@
       display: block;
       width: 100%;
     }
-
     tr {
       margin-bottom: 1rem;
       background: rgba(255, 255, 255, 0.05);
-      border-radius: var(--radius-md);
+      border-radius: 0.5rem;
       overflow: hidden;
-      border: 1px solid var(--glass-border);
+      border: 1px solid rgba(255, 255, 255, 0.1);
     }
-
-    tbody tr:hover {
-      background: rgba(255, 255, 255, 0.08);
-    }
-
-    td {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 0.75rem 1rem;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-      text-align: right;
-    }
-
-    td::before {
-      content: attr(data-label);
-      font-weight: 600;
-      color: var(--text-muted);
-      font-size: 0.8rem;
-      text-transform: uppercase;
-      margin-right: 1rem;
-    }
-
-    td:last-child {
-      border-bottom: none;
-      justify-content: flex-end;
-    }
-
-    td:last-child::before {
-      display: none;
-    }
+    /* td styles handled by utility classes now */
   }
 </style>

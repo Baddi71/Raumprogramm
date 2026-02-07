@@ -43,12 +43,12 @@
   }
 </script>
 
-<main>
+<main class="flex min-h-screen flex-col">
   <Header {user} {logout} {isAuthenticated} />
 
   {#if $isAuthenticated}
     {#if dbReady}
-      <div class="content">
+      <div class="mx-auto w-full max-w-[1400px] flex-1 p-8">
         {#if currentView === "list"}
           <RoomList on:select={(e) => handleNavigate("detail", e.detail)} />
         {:else if currentView === "detail"}
@@ -59,22 +59,34 @@
         {/if}
       </div>
     {:else if dbError}
-      <div class="status-container glass-panel error">
-        <h2>Verbindungsfehler</h2>
-        <p class="error-detail">{dbError}</p>
-        <p><small>Bitte prüfen Sie die Datenbankkonfiguration.</small></p>
+      <div
+        class="glass-panel mx-auto my-16 max-w-[400px] border-error/50 bg-error/10 p-8 text-center text-error"
+      >
+        <h2 class="mb-4 text-xl font-bold">Verbindungsfehler</h2>
+        <p class="mb-4">{dbError}</p>
+        <p>
+          <small class="opacity-75"
+            >Bitte prüfen Sie die Datenbankkonfiguration.</small
+          >
+        </p>
       </div>
     {:else}
-      <div class="status-container glass-panel">
-        <div class="spinner"></div>
+      <div class="glass-panel mx-auto my-16 max-w-[400px] p-8 text-center">
+        <div
+          class="spinner mx-auto mb-4 h-10 w-10 rounded-full border-[3px] border-white/30 border-t-primary animate-spin"
+        ></div>
         <p>Verbinde mit Raum-Datenbank...</p>
       </div>
     {/if}
   {:else}
-    <div class="login-container">
-      <div class="login-card glass-panel">
-        <h1 class="text-gradient">Raumprogramm</h1>
-        <p>
+    <div class="flex flex-1 items-center justify-center p-4">
+      <div
+        class="glass-panel w-full max-w-[480px] p-12 text-center flex flex-col gap-6"
+      >
+        <h1 class="text-gradient text-5xl font-extrabold leading-tight">
+          Raumprogramm
+        </h1>
+        <p class="text-text-secondary">
           Bitte melden Sie sich an, um Zugriff auf die Raumdatenbank zu
           erhalten.
         </p>
@@ -85,73 +97,3 @@
     </div>
   {/if}
 </main>
-
-<style>
-  main {
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-  }
-
-  .content {
-    padding: 2rem;
-    max-width: 1400px;
-    margin: 0 auto;
-    width: 100%;
-    flex: 1;
-  }
-
-  /* Login & Status Styles */
-  .login-container {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 1rem;
-  }
-
-  .login-card {
-    padding: 3rem;
-    text-align: center;
-    max-width: 480px;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-  }
-
-  h1 {
-    font-size: 3rem;
-    font-weight: 800;
-    margin: 0;
-    line-height: 1.2;
-  }
-
-  .status-container {
-    margin: 4rem auto;
-    padding: 2rem;
-    max-width: 400px;
-    text-align: center;
-  }
-
-  .status-container.error {
-    border-color: rgba(239, 68, 68, 0.5);
-    background: rgba(239, 68, 68, 0.1);
-  }
-
-  .spinner {
-    width: 40px;
-    height: 40px;
-    border: 3px solid rgba(255, 255, 255, 0.3);
-    border-radius: 50%;
-    border-top-color: var(--primary);
-    animation: spin 1s ease-in-out infinite;
-    margin: 0 auto 1rem;
-  }
-
-  @keyframes spin {
-    to {
-      transform: rotate(360deg);
-    }
-  }
-</style>
